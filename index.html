@@ -1,31 +1,144 @@
 <!DOCTYPE html>
 <html lang="ar">
-
 <head>
 <meta charset="UTF-8">
 <title>ROMEO LIVE TV</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
 <style>
-body {margin:0; font-family:'Tajawal',sans-serif; background:linear-gradient(to bottom,#020617,#0f172a); color:white; direction:rtl;}
-header{text-align:center; font-size:28px; padding:20px; font-weight:bold;}
-.search{width:90%; margin:auto; margin-bottom:10px;}
-.search input{width:100%; padding:12px; border-radius:10px; border:none; background:#1e293b; color:white;}
-.day-buttons{text-align:center; margin-bottom:15px;}
-.day-buttons button{margin:0 5px; padding:5px 12px; border-radius:6px; background:#3b82f6; color:white; border:none; cursor:pointer;}
-.container{width:90%; margin:auto; margin-bottom:25px;}
-.league{margin-bottom:25px; background:rgba(255,255,255,0.05); padding:10px; border-radius:15px; box-shadow:0 0 15px rgba(59,130,246,0.4);}
-.league-title{font-size:18px; margin-bottom:10px;}
-.match{display:flex; flex-direction:column; align-items:center; padding:12px; border-bottom:1px solid rgba(255,255,255,0.1); text-align:center;}
-.match-header{display:flex; justify-content:space-between; align-items:center; width:100%; max-width:500px;}
-.team{display:flex; align-items:center; gap:8px;}
-.team img{width:28px;}
-.score{font-size:18px; color:#38bdf8;}
-.match-footer{display:flex; justify-content:space-between; width:100%; max-width:500px; margin-top:5px; font-size:14px; color:#a5b4fc;}
-.details-btn{background:#3b82f6; border:none; padding:6px 12px; border-radius:6px; color:white; cursor:pointer;}
-.details{margin-top:20px; padding:20px; display:none; background:rgba(255,255,255,0.05); border-radius:15px; box-shadow:0 0 15px rgba(59,130,246,0.4);}
+body {
+  margin:0;
+  font-family:'Tajawal',sans-serif;
+  background:linear-gradient(to bottom,#020617,#0f172a);
+  color:white;
+  direction:rtl;
+  font-size:16px;
+}
+
+header{
+  text-align:center;
+  font-size:36px;
+  padding:20px;
+  font-weight:bold;
+}
+
+.search{
+  width:90%;
+  margin:auto;
+  margin-bottom:10px;
+}
+
+.search input{
+  width:100%;
+  padding:14px;
+  border-radius:10px;
+  border:none;
+  background:#1e293b;
+  color:white;
+  font-size:16px;
+}
+
+.day-buttons{
+  text-align:center;
+  margin-bottom:15px;
+}
+
+.day-buttons button{
+  margin:0 5px;
+  padding:8px 14px;
+  border-radius:6px;
+  background:#3b82f6;
+  color:white;
+  border:none;
+  cursor:pointer;
+  font-size:16px;
+}
+
+.container{
+  width:90%;
+  margin:auto;
+  margin-bottom:25px;
+}
+
+.league{
+  margin-bottom:25px;
+  background:rgba(255,255,255,0.05);
+  padding:12px;
+  border-radius:15px;
+  box-shadow:0 0 15px rgba(59,130,246,0.4);
+}
+
+.league-title{
+  font-size:22px;
+  margin-bottom:10px;
+  font-weight:bold;
+}
+
+.match{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+  font-size:18px;
+}
+
+.team{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.team img{
+  width:32px;
+}
+
+.score-time{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  font-weight:bold;
+}
+
+.time-circle{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:#3b82f6;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:14px;
+  color:white;
+}
+
+.details-btn{
+  background:#3b82f6;
+  border:none;
+  padding:6px 12px;
+  border-radius:6px;
+  color:white;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.match-start{
+  margin-left:10px;
+  font-size:14px;
+  color:#a5b4fc;
+}
+
+.details{
+  margin-top:20px;
+  padding:20px;
+  display:none;
+  background:rgba(255,255,255,0.05);
+  border-radius:15px;
+  box-shadow:0 0 15px rgba(59,130,246,0.4);
+  font-size:16px;
+}
 </style>
 </head>
-
 <body>
 
 <header>𝑅𝑂𝑀𝐸𝑂 𝐿𝐼𝑉𝐸 𝑇𝑉</header>
@@ -46,12 +159,13 @@ header{text-align:center; font-size:28px; padding:20px; font-weight:bold;}
 <script>
 const API_KEY="723f931fc5af205b50e1af004d4c1c42";
 const allowedLeagues=["Egyptian Premier League","Premier League","Serie A","La Liga","CAF Champions League","UEFA Champions League","UEFA Europa League","CAF Confederation Cup"];
+let matchesData=[];
 
 function formatDate(d){return d.toISOString().split("T")[0];}
 
 function cairoTime(utcDate){
   return new Date(utcDate).toLocaleTimeString('ar-EG',{
-    hour:'2-digit', minute:'2-digit', timeZone:'Africa/Cairo'
+    hour:'2-digit', minute:'2-digit', hour12:true, timeZone:'Africa/Cairo'
   });
 }
 
@@ -59,7 +173,11 @@ async function renderMatches(matches){
   const container=document.getElementById("matches");
   container.innerHTML="";
   let leagues={};
-  matches.forEach(match=>{if(!leagues[match.league.name]) leagues[match.league.name]=[]; leagues[match.league.name].push(match);});
+  matches.forEach(match=>{
+    if(!leagues[match.league.name]) leagues[match.league.name]=[];
+    leagues[match.league.name].push(match);
+  });
+
   for(let league in leagues){
     let html=`<div class="league"><div class="league-title">🏆 ${league}</div>`;
     for(let match of leagues[league]){
@@ -69,16 +187,31 @@ async function renderMatches(matches){
       let awayLogo=match.teams.away.logo;
       let homeGoals=match.goals.home??"-";
       let awayGoals=match.goals.away??"-";
-      let matchTime=cairoTime(match.fixture.date);
+
+      // حالة المباراة
+      let status=match.fixture.status.short;
+      let elapsed=match.fixture.status.elapsed??"-";
+      let circleText="";
+      if(status==="NS"){
+        circleText="لم تبدأ";
+      } else if(status==="FT" || status==="AET" || status==="PEN"){
+        circleText="انتهى";
+      } else {
+        circleText=`${elapsed}'`;
+      }
+
+      let startTime=cairoTime(match.fixture.date);
 
       html+=`<div class="match">
-        <div class="match-header">
-          <div class="team"><img src="${homeLogo}">${home}</div>
-          <div class="score">${homeGoals} - ${awayGoals}</div>
-          <div class="team"><img src="${awayLogo}">${away}</div>
+        <div class="team"><img src="${homeLogo}">${home}</div>
+        <div class="score-time">
+          <span>${homeGoals}</span>
+          <div class="time-circle">${circleText}</div>
+          <span>${awayGoals}</span>
         </div>
-        <div class="match-footer">
-          <div class="time">🕒 ${matchTime}</div>
+        <div class="team"><img src="${awayLogo}">${away}</div>
+        <div>
+          <span class="match-start">${startTime}</span>
           <button class="details-btn" onclick="showDetails(${match.fixture.id})">التشكيلة</button>
         </div>
       </div>`;
@@ -88,7 +221,6 @@ async function renderMatches(matches){
   }
 }
 
-// دالة تجلب المباريات حسب اليوم
 function fetchMatches(dayKey){
   let date;
   const today=new Date();
@@ -103,6 +235,10 @@ function fetchMatches(dayKey){
   .then(data=>{
     matchesData=data.response.filter(m=>allowedLeagues.includes(m.league.name));
     renderMatches(matchesData);
+  })
+  .catch(err=>{
+    document.getElementById("matches").innerHTML="❌ حدث خطأ أثناء تحميل المباريات";
+    console.error(err);
   });
 }
 
@@ -131,6 +267,9 @@ document.getElementById("search").addEventListener("input",function(){
   const filtered=matchesData.filter(m=>m.teams.home.name.toLowerCase().includes(value)||m.teams.away.name.toLowerCase().includes(value));
   renderMatches(filtered);
 });
+
+// تحميل مباريات اليوم تلقائي عند فتح الموقع
+fetchMatches('today');
 </script>
 
 </body>
