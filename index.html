@@ -2,383 +2,120 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>ROMEO LIVE TV</title>
-
+<title>ROMEO LIVE TV - النسخة الاحتياطية</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
-
 <style>
-
 body{
-margin:0;
-font-family:'Tajawal',sans-serif;
-background:#020617;
-color:white;
-direction:rtl;
+  margin:0;
+  font-family:'Tajawal',sans-serif;
+  background:#020617;
+  color:white;
+  direction:rtl;
 }
-
 header{
-text-align:center;
-font-size:32px;
-padding:18px;
-font-weight:bold;
-background:#020617;
-border-bottom:1px solid #1e293b;
+  text-align:center;
+  font-size:28px;
+  padding:18px;
+  font-weight:bold;
+  border-bottom:1px solid #1e293b;
 }
-
-.search{
-width:90%;
-margin:auto;
-margin-top:10px;
+.days{
+  text-align:center;
+  margin-top:10px;
 }
-
-.search input{
-width:100%;
-padding:12px;
-border-radius:8px;
-border:none;
-background:#1e293b;
-color:white;
-font-size:15px;
+.days button{
+  margin:4px;
+  padding:8px 14px;
+  background:#2563eb;
+  border:none;
+  color:white;
+  border-radius:6px;
+  cursor:pointer;
 }
-
-.day-buttons{
-text-align:center;
-margin-top:10px;
-}
-
-.day-buttons button{
-margin:4px;
-padding:8px 14px;
-background:#2563eb;
-border:none;
-color:white;
-border-radius:6px;
-cursor:pointer;
-}
-
 .container{
-width:92%;
-margin:auto;
-margin-top:15px;
+  width:92%;
+  margin:auto;
+  margin-top:20px;
 }
-
-.live-box{
-background:#7f1d1d;
-padding:10px;
-border-radius:10px;
-margin-bottom:15px;
-}
-
-.live-title{
-font-weight:bold;
-margin-bottom:8px;
-}
-
-.league{
-background:#0f172a;
-border-radius:12px;
-margin-bottom:20px;
-padding:10px;
-box-shadow:0 0 10px rgba(59,130,246,0.3);
-}
-
-.league-title{
-font-size:18px;
-margin-bottom:10px;
-font-weight:bold;
-color:#93c5fd;
-}
-
 .match{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:10px;
-border-bottom:1px solid #1e293b;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px;
+  background:#0f172a;
+  border-radius:10px;
+  margin-bottom:10px;
 }
-
 .team{
-display:flex;
-align-items:center;
-gap:8px;
-font-size:14px;
+  display:flex;
+  align-items:center;
+  gap:8px;
 }
-
 .team img{
-width:26px;
+  width:26px;
 }
-
-.score{
-font-weight:bold;
-display:flex;
-gap:8px;
-align-items:center;
-}
-
-.live{
-background:red;
-font-size:11px;
-padding:2px 6px;
-border-radius:4px;
-}
-
 .time{
-font-size:13px;
-color:#cbd5f5;
+  color:#cbd5f5;
 }
-
-.watch{
-background:#2563eb;
-border:none;
-padding:6px 10px;
-border-radius:6px;
-color:white;
-font-size:12px;
-cursor:pointer;
-}
-
-.message{
-text-align:center;
-padding:30px;
-font-size:16px;
-}
-
 </style>
 </head>
-
 <body>
 
-<header>𝑅𝑂𝑀𝐸𝑂 𝐿𝐼𝑉𝐸 𝑇𝑉</header>
+<header>ROMEO LIVE TV</header>
 
-<div class="search">
-<input id="search" placeholder="ابحث عن مباراة">
+<div class="days">
+  <button onclick="showDay('11')">11 مارس</button>
+  <button onclick="showDay('12')">12 مارس</button>
+  <button onclick="showDay('13')">13 مارس</button>
+  <button onclick="showDay('14')">14 مارس</button>
+  <button onclick="showDay('15')">15 مارس</button>
 </div>
 
-<div class="day-buttons">
-<button onclick="getMatches('yesterday')">أمس</button>
-<button onclick="getMatches('today')">اليوم</button>
-<button onclick="getMatches('tomorrow')">غدًا</button>
-</div>
-
-<div class="container" id="liveMatches"></div>
 <div class="container" id="matches"></div>
 
 <script>
+const backupData = {
 
-const API_KEY="11fb03e8dee1662a91644ba51c8265eb"
+"11":[
+  {home:"انبي", homeLogo:"https://upload.wikimedia.org/wikipedia/en/3/3f/Enppi_Logo.png", away:"الزمالك", awayLogo:"https://upload.wikimedia.org/wikipedia/en/2/24/Zamalek_SC_logo.png", time:"21:30"},
+  {home:"زد", homeLogo:"https://upload.wikimedia.org/wikipedia/en/0/00/Zed_FC_logo.png", away:"مودرن سبورت", awayLogo:"https://upload.wikimedia.org/wikipedia/en/5/5f/Modern_Sport_logo.png", time:"21:30"}
+],
 
-let matches=[]
+"12":[
+  {home:"بولونيا", homeLogo:"https://upload.wikimedia.org/wikipedia/en/5/5b/Bologna_F.C._1909_logo.svg", away:"روما", awayLogo:"https://upload.wikimedia.org/wikipedia/en/f/f7/AS_Roma_logo_%282017%29.svg", time:"19:45"},
+  {home:"ليل", homeLogo:"https://upload.wikimedia.org/wikipedia/en/3/3f/Lille_OSC_2018_logo.svg", away:"أستون فيلا", awayLogo:"https://upload.wikimedia.org/wikipedia/en/9/9f/Aston_Villa_logo.svg", time:"22:00"},
+  {home:"شتوتجارت", homeLogo:"https://upload.wikimedia.org/wikipedia/en/e/eb/VfB_Stuttgart_1893_Logo.svg", away:"بورتو", awayLogo:"https://upload.wikimedia.org/wikipedia/en/f/f1/FC_Porto.svg", time:"22:00"}
+],
 
-function dateFormat(d){
-return d.toISOString().split("T")[0]
-}
+"13":[
+  {home:"برشلونة", homeLogo:"https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg", away:"ريال سوسيداد", awayLogo:"https://upload.wikimedia.org/wikipedia/en/f/f1/Real_Sociedad_logo.svg", time:"22:00"}
+],
 
-function cairoTime(date){
+"14":[
+  {home:"بايرن ميونخ", homeLogo:"https://upload.wikimedia.org/wikipedia/en/1/1f/FC_Bayern_Munich_logo_(2017).svg", away:"بوروسيا دورتموند", awayLogo:"https://upload.wikimedia.org/wikipedia/en/7/7a/Borussia_Dortmund_logo.svg", time:"21:30"}
+],
 
-return new Date(date).toLocaleTimeString("ar-EG",{
-
-hour:"2-digit",
-minute:"2-digit",
-timeZone:"Africa/Cairo"
-
-})
-
-}
-
-function render(data){
-
-const container=document.getElementById("matches")
-const liveContainer=document.getElementById("liveMatches")
-
-container.innerHTML=""
-liveContainer.innerHTML=""
-
-let leagues={}
-let live=[]
-
-data.forEach(m=>{
-
-if(m.fixture.status.short!="NS" && m.fixture.status.short!="FT")
-live.push(m)
-
-if(!leagues[m.league.name]) leagues[m.league.name]=[]
-
-leagues[m.league.name].push(m)
-
-})
-
-if(live.length>0){
-
-let html='<div class="live-box"><div class="live-title">المباريات المباشرة</div>'
-
-live.forEach(m=>{
-
-html+=`
-<div class="match">
-
-<div class="team">
-<img src="${m.teams.home.logo}">
-${m.teams.home.name}
-</div>
-
-<div class="score">
-
-<span class="live">LIVE</span>
-
-${m.goals.home ?? "-"} - ${m.goals.away ?? "-"}
-
-</div>
-
-<div class="team">
-
-${m.teams.away.name}
-
-<img src="${m.teams.away.logo}">
-
-</div>
-
-</div>
-`
-
-})
-
-html+="</div>"
-
-liveContainer.innerHTML=html
+"15":[
+  {home:"مانشستر يونايتد", homeLogo:"https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg", away:"أستون فيلا", awayLogo:"https://upload.wikimedia.org/wikipedia/en/9/9f/Aston_Villa_logo.svg", time:"19:30"}
+]
 
 }
 
-for(let league in leagues){
-
-let html=`<div class="league">
-<div class="league-title">${league}</div>`
-
-leagues[league].forEach(m=>{
-
-let home=m.teams.home.name
-let away=m.teams.away.name
-
-let homeLogo=m.teams.home.logo
-let awayLogo=m.teams.away.logo
-
-let homeGoals=m.goals.home ?? "-"
-let awayGoals=m.goals.away ?? "-"
-
-let status=m.fixture.status.short
-
-let time=cairoTime(m.fixture.date)
-
-let live=""
-
-if(status!="NS" && status!="FT") live='<span class="live">LIVE</span>'
-
-html+=`
-
-<div class="match">
-
-<div class="team">
-<img src="${homeLogo}">
-${home}
-</div>
-
-<div class="score">
-
-${live}
-
-${homeGoals} - ${awayGoals}
-
-</div>
-
-<div class="team">
-
-${away}
-
-<img src="${awayLogo}">
-
-</div>
-
-<div>
-
-<div class="time">${time}</div>
-
-<button class="watch">مشاهدة</button>
-
-</div>
-
-</div>
-
-`
-
-})
-
-html+="</div>"
-
-container.innerHTML+=html
-
+function showDay(day){
+  let html=""
+  backupData[day].forEach(match=>{
+    html+=`
+    <div class="match">
+      <div class="team"><img src="${match.homeLogo}">${match.home}</div>
+      <div class="time">${match.time}</div>
+      <div class="team">${match.away}<img src="${match.awayLogo}"></div>
+    </div>`;
+  });
+  document.getElementById("matches").innerHTML = html;
 }
 
-}
-
-function getMatches(day){
-
-let d=new Date()
-
-if(day=="yesterday") d.setDate(d.getDate()-1)
-if(day=="tomorrow") d.setDate(d.getDate()+1)
-
-document.getElementById("matches").innerHTML='<div class="message">جاري تحميل المباريات...</div>'
-
-fetch(`https://v3.football.api-sports.io/fixtures?date=${dateFormat(d)}`,{
-
-headers:{
-"x-apisports-key":API_KEY
-}
-
-})
-
-.then(r=>r.json())
-
-.then(data=>{
-
-if(!data.response){
-
-document.getElementById("matches").innerHTML='<div class="message">فشل تحميل المباريات</div>'
-return
-
-}
-
-matches=data.response
-
-render(matches)
-
-})
-
-.catch(()=>{
-
-document.getElementById("matches").innerHTML='<div class="message">خطأ في الاتصال</div>'
-
-})
-
-}
-
-document.getElementById("search").addEventListener("input",function(){
-
-let v=this.value.toLowerCase()
-
-let filtered=matches.filter(m=>
-
-m.teams.home.name.toLowerCase().includes(v) ||
-
-m.teams.away.name.toLowerCase().includes(v)
-
-)
-
-render(filtered)
-
-})
-
-getMatches("today")
-
+// عرض اليوم 11 مارس عند التحميل
+showDay("11");
 </script>
 
 </body>
