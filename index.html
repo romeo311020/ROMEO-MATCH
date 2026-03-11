@@ -1,62 +1,19 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>ROMEO LIVE TV - النسخة الاحتياطية</title>
+<title>ROMEO LIVE TV</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
 <style>
-body{
-  margin:0;
-  font-family:'Tajawal',sans-serif;
-  background:#020617;
-  color:white;
-  direction:rtl;
-}
-header{
-  text-align:center;
-  font-size:28px;
-  padding:18px;
-  font-weight:bold;
-  border-bottom:1px solid #1e293b;
-}
-.days{
-  text-align:center;
-  margin-top:10px;
-}
-.days button{
-  margin:4px;
-  padding:8px 14px;
-  background:#2563eb;
-  border:none;
-  color:white;
-  border-radius:6px;
-  cursor:pointer;
-}
-.container{
-  width:92%;
-  margin:auto;
-  margin-top:20px;
-}
-.match{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:12px;
-  background:#0f172a;
-  border-radius:10px;
-  margin-bottom:10px;
-}
-.team{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-.team img{
-  width:26px;
-}
-.time{
-  color:#cbd5f5;
-}
+body {margin:0;font-family:'Tajawal',sans-serif;background:#020617;color:white;direction:rtl;}
+header {text-align:center;font-size:28px;padding:18px;font-weight:bold;border-bottom:1px solid #1e293b;}
+.days {text-align:center;margin-top:10px;}
+.days button {margin:4px;padding:8px 14px;background:#2563eb;border:none;color:white;border-radius:6px;cursor:pointer;}
+.container {width:92%;margin:auto;margin-top:20px;}
+.match {display:flex;justify-content:space-between;align-items:center;padding:12px;background:#0f172a;border-radius:10px;margin-bottom:10px;}
+.team {display:flex;align-items:center;gap:8px;}
+.team img {width:26px;}
+.time {color:#cbd5f5;}
 </style>
 </head>
 <body>
@@ -73,49 +30,85 @@ header{
 
 <div class="container" id="matches"></div>
 
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
 <script>
-const backupData = {
+// --- إعداد Firebase ---
+const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-"11":[
-  {home:"انبي", homeLogo:"https://upload.wikimedia.org/wikipedia/en/3/3f/Enppi_Logo.png", away:"الزمالك", awayLogo:"https://upload.wikimedia.org/wikipedia/en/2/24/Zamalek_SC_logo.png", time:"21:30"},
-  {home:"زد", homeLogo:"https://upload.wikimedia.org/wikipedia/en/0/00/Zed_FC_logo.png", away:"مودرن سبورت", awayLogo:"https://upload.wikimedia.org/wikipedia/en/5/5f/Modern_Sport_logo.png", time:"21:30"}
-],
+// --- النسخة الاحتياطية ---
+let backupData = JSON.parse(localStorage.getItem('backupMatches')) || {
+  "11":[
+    {home:"انبي", homeLogo:"https://upload.wikimedia.org/wikipedia/en/3/3f/Enppi_Logo.png", away:"الزمالك", awayLogo:"https://upload.wikimedia.org/wikipedia/en/2/24/Zamalek_SC_logo.png", time:"21:30"},
+    {home:"زد", homeLogo:"https://upload.wikimedia.org/wikipedia/en/0/00/Zed_FC_logo.png", away:"مودرن سبورت", awayLogo:"https://upload.wikimedia.org/wikipedia/en/5/5f/Modern_Sport_logo.png", time:"21:30"}
+  ]
+};
 
-"12":[
-  {home:"بولونيا", homeLogo:"https://upload.wikimedia.org/wikipedia/en/5/5b/Bologna_F.C._1909_logo.svg", away:"روما", awayLogo:"https://upload.wikimedia.org/wikipedia/en/f/f7/AS_Roma_logo_%282017%29.svg", time:"19:45"},
-  {home:"ليل", homeLogo:"https://upload.wikimedia.org/wikipedia/en/3/3f/Lille_OSC_2018_logo.svg", away:"أستون فيلا", awayLogo:"https://upload.wikimedia.org/wikipedia/en/9/9f/Aston_Villa_logo.svg", time:"22:00"},
-  {home:"شتوتجارت", homeLogo:"https://upload.wikimedia.org/wikipedia/en/e/eb/VfB_Stuttgart_1893_Logo.svg", away:"بورتو", awayLogo:"https://upload.wikimedia.org/wikipedia/en/f/f1/FC_Porto.svg", time:"22:00"}
-],
+// --- تحويل الوقت لتوقيت القاهرة ---
+function cairoTime(utcDate){return new Date(utcDate).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit',timeZone:'Africa/Cairo'});}
 
-"13":[
-  {home:"برشلونة", homeLogo:"https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg", away:"ريال سوسيداد", awayLogo:"https://upload.wikimedia.org/wikipedia/en/f/f1/Real_Sociedad_logo.svg", time:"22:00"}
-],
-
-"14":[
-  {home:"بايرن ميونخ", homeLogo:"https://upload.wikimedia.org/wikipedia/en/1/1f/FC_Bayern_Munich_logo_(2017).svg", away:"بوروسيا دورتموند", awayLogo:"https://upload.wikimedia.org/wikipedia/en/7/7a/Borussia_Dortmund_logo.svg", time:"21:30"}
-],
-
-"15":[
-  {home:"مانشستر يونايتد", homeLogo:"https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg", away:"أستون فيلا", awayLogo:"https://upload.wikimedia.org/wikipedia/en/9/9f/Aston_Villa_logo.svg", time:"19:30"}
-]
-
+// --- جلب بيانات من Firebase ---
+function loadMatches() {
+    db.ref('matches').on('value', snapshot=>{
+        const data = snapshot.val();
+        if(data){
+            renderMatches(Object.values(data));
+        } else {
+            renderBackup('11');
+        }
+    }, err=>{
+        renderBackup('11');
+    });
 }
 
+// --- عرض النسخة الاحتياطية ---
+function renderBackup(day){
+    const container = document.getElementById('matches');
+    container.innerHTML = "";
+    backupData[day].forEach(m=>{
+        container.innerHTML += `
+            <div class="match">
+                <div class="team"><img src="${m.homeLogo}">${m.home}</div>
+                <div class="time">${m.time}</div>
+                <div class="team">${m.away}<img src="${m.awayLogo}"></div>
+            </div>
+        `;
+    });
+}
+
+// --- عرض المباريات من Firebase ---
+function renderMatches(matches){
+    const container = document.getElementById('matches');
+    container.innerHTML = "";
+    matches.forEach(m=>{
+        container.innerHTML += `
+            <div class="match">
+                <div class="team"><img src="${m.homeLogo}">${m.home}</div>
+                <div class="time">${m.time}</div>
+                <div class="team">${m.away}<img src="${m.awayLogo}"></div>
+            </div>
+        `;
+    });
+}
+
+// --- زر الأيام للنسخة الاحتياطية ---
 function showDay(day){
-  let html=""
-  backupData[day].forEach(match=>{
-    html+=`
-    <div class="match">
-      <div class="team"><img src="${match.homeLogo}">${match.home}</div>
-      <div class="time">${match.time}</div>
-      <div class="team">${match.away}<img src="${match.awayLogo}"></div>
-    </div>`;
-  });
-  document.getElementById("matches").innerHTML = html;
+    renderBackup(day);
 }
 
-// عرض اليوم 11 مارس عند التحميل
-showDay("11");
+// تحميل المباريات عند فتح الصفحة
+loadMatches();
 </script>
 
 </body>
