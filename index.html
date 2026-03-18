@@ -4,61 +4,101 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ROMEO LIVE TV</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 <style>
+/* ======== Reset ======== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ======== Body ======== */
 body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #0a1f44, #06122a);
+  font-family: 'Cairo', sans-serif;
+  background: radial-gradient(circle at top, #0f1c40, #06122a);
   color: #fff;
   text-align: center;
-  padding: 50px;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
 }
+
+/* ======== Logo ======== */
+.logo {
+  width: 200px;
+  border-radius: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+  transition: transform 0.3s ease;
+}
+.logo:hover {
+  transform: scale(1.05) rotate(-2deg);
+}
+
+/* ======== Title ======== */
 h1 {
-  font-size: 40px;
-  margin-bottom: 20px;
-  text-shadow: 2px 2px 8px #000;
+  font-size: 48px;
+  margin-bottom: 15px;
+  text-shadow: 2px 2px 15px rgba(0,0,0,0.7);
+  letter-spacing: 2px;
 }
-img {
-  width: 180px;
-  border-radius: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.5);
-}
+
+/* ======== Description ======== */
 p {
-  font-size: 18px;
-  max-width: 450px;
-  margin: 0 auto 30px;
-}
-button {
-  padding: 15px 35px;
   font-size: 20px;
+  max-width: 500px;
+  margin: 0 auto 40px;
+  line-height: 1.6;
+  color: #d1d1d1;
+}
+
+/* ======== Button ======== */
+.button {
+  padding: 18px 45px;
+  font-size: 22px;
   border: none;
-  border-radius: 12px;
-  background-color: #1e90ff;
+  border-radius: 50px;
+  background: linear-gradient(45deg, #1e90ff, #00bfff);
   color: #fff;
   cursor: pointer;
-  box-shadow: 0 0 20px #1e90ff, 0 5px 15px rgba(0,0,0,0.3);
-  transition: 0.3s;
+  box-shadow: 0 8px 25px rgba(30,144,255,0.6);
+  transition: 0.4s;
+  font-weight: bold;
 }
-button:hover {
-  box-shadow: 0 0 30px #00bfff, 0 5px 15px rgba(0,0,0,0.3);
+.button:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 12px 35px rgba(0,191,255,0.7);
 }
+
+/* ======== Footer ======== */
 .footer {
-  margin-top: 40px;
+  margin-top: 50px;
   font-size: 14px;
-  color: #aaa;
+  color: #888;
+}
+
+/* ======== Responsive ======== */
+@media (max-width: 480px) {
+  h1 { font-size: 36px; }
+  p { font-size: 16px; }
+  .button { font-size: 18px; padding: 14px 35px; }
+  .logo { width: 150px; }
 }
 </style>
 </head>
 <body>
 
-<img src="app-icon.png" alt="ROMEO LIVE TV">
-<h1>ROMEO LIVE TV</h1>
-<p>اضغط الزر أدناه لعرض جدول المباريات اليوم مباشرة!</p>
+<img src="app-icon.png" alt="ROMEO LIVE TV" class="logo">
 
-<a href="https://www.filgoal.com/matches/?date=2026-03-12" target="_blank">
-  <button>اضغط هنا لعرض المباريات</button>
-</a>
+<h1>ROMEO LIVE TV</h1>
+<p>استمتع بمشاهدة المباريات مباشرة على هاتفك أو جهازك، اضغط الزر أدناه لمتابعة جدول المباريات اليوم!</p>
+
+<button class="button" onclick="window.open('https://www.filgoal.com/matches/?date=2026-03-12','_blank')">
+  عرض المباريات اليوم
+</button>
 
 <div class="footer">
 *ستفتح صفحة جدول المباريات على FilGoal.
