@@ -1,108 +1,158 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ROMEO LIVE TV</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-<style>
-/* ======== Reset ======== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROMEO LIVE TV | MATCH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #040714;
+            --card: #161b29;
+            --accent: #e5b80b;
+            --text-gray: #8e94a5;
+            --glass: rgba(22, 27, 41, 0.8);
+        }
 
-/* ======== Body ======== */
-body {
-  font-family: 'Cairo', sans-serif;
-  background: radial-gradient(circle at top, #0f1c40, #06122a);
-  color: #fff;
-  text-align: center;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 20px;
-}
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        body { background: var(--bg); color: white; padding-bottom: 90px; }
 
-/* ======== Logo ======== */
-.logo {
-  width: 200px;
-  border-radius: 25px;
-  margin-bottom: 30px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-  transition: transform 0.3s ease;
-}
-.logo:hover {
-  transform: scale(1.05) rotate(-2deg);
-}
+        /* Header & Brand */
+        header {
+            background: var(--card); padding: 20px 10px; text-align: center;
+            border-bottom: 2px solid var(--accent); position: sticky; top: 0; z-index: 1000;
+        }
+        .logo-main { font-size: 26px; font-weight: 900; letter-spacing: 1px; color: white; }
+        .logo-main span { color: var(--accent); }
+        .logo-sub { font-size: 16px; color: var(--text-gray); font-style: italic; font-family: serif; margin-top: -5px; display: block; }
 
-/* ======== Title ======== */
-h1 {
-  font-size: 48px;
-  margin-bottom: 15px;
-  text-shadow: 2px 2px 15px rgba(0,0,0,0.7);
-  letter-spacing: 2px;
-}
+        /* Search Bar */
+        .search-section { padding: 15px 5%; }
+        .search-box {
+            position: relative; width: 100%; background: var(--card);
+            border-radius: 50px; border: 1px solid rgba(229, 184, 11, 0.3); padding: 10px 20px;
+            display: flex; align-items: center;
+        }
+        .search-box input {
+            background: none; border: none; color: white; width: 100%;
+            padding-right: 10px; outline: none; font-size: 14px;
+        }
+        .search-box i { color: var(--accent); }
 
-/* ======== Description ======== */
-p {
-  font-size: 20px;
-  max-width: 500px;
-  margin: 0 auto 40px;
-  line-height: 1.6;
-  color: #d1d1d1;
-}
+        /* Date Navigation */
+        .date-nav {
+            display: flex; justify-content: space-around; padding: 10px 5%; gap: 10px;
+        }
+        .date-btn {
+            flex: 1; background: var(--card); border: 1px solid rgba(229, 184, 11, 0.2);
+            color: white; padding: 10px; border-radius: 12px; cursor: pointer;
+            font-size: 13px; font-weight: bold; transition: 0.3s;
+        }
+        .date-btn.active { background: var(--accent); color: black; border-color: var(--accent); }
 
-/* ======== Button ======== */
-.button {
-  padding: 18px 45px;
-  font-size: 22px;
-  border: none;
-  border-radius: 50px;
-  background: linear-gradient(45deg, #1e90ff, #00bfff);
-  color: #fff;
-  cursor: pointer;
-  box-shadow: 0 8px 25px rgba(30,144,255,0.6);
-  transition: 0.4s;
-  font-weight: bold;
-}
-.button:hover {
-  transform: translateY(-5px) scale(1.05);
-  box-shadow: 0 12px 35px rgba(0,191,255,0.7);
-}
+        /* Matches Grid */
+        .matches-container { padding: 10px 5%; min-height: 400px; }
+        
+        /* Widget Styling */
+        #wg-api-football-games {
+            border-radius: 15px; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
 
-/* ======== Footer ======== */
-.footer {
-  margin-top: 50px;
-  font-size: 14px;
-  color: #888;
-}
+        /* Transparent Bottom Nav */
+        .bottom-nav {
+            position: fixed; bottom: 15px; left: 5%; right: 5%; height: 65px;
+            background: var(--glass); backdrop-filter: blur(10px);
+            display: flex; justify-content: space-around; align-items: center;
+            border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
+            z-index: 2000; box-shadow: 0 8px 32px rgba(0,0,0,0.8);
+        }
+        .nav-link { 
+            text-align: center; color: var(--text-gray); text-decoration: none; 
+            font-size: 10px; font-weight: bold; transition: 0.3s;
+        }
+        .nav-link i { font-size: 22px; display: block; margin-bottom: 4px; }
+        .nav-link.active { color: var(--accent); }
 
-/* ======== Responsive ======== */
-@media (max-width: 480px) {
-  h1 { font-size: 36px; }
-  p { font-size: 16px; }
-  .button { font-size: 18px; padding: 14px 35px; }
-  .logo { width: 150px; }
-}
-</style>
+    </style>
 </head>
 <body>
 
-<img src="app-icon.png" alt="ROMEO LIVE TV" class="logo">
+<header>
+    <div class="logo-main">ROMEO <span>LIVE TV</span></div>
+    <span class="logo-sub">𝑴𝒂𝒕𝒄𝒉</span>
+</header>
 
-<h1>ROMEO LIVE TV</h1>
-<p>استمتع بمشاهدة المباريات مباشرة على هاتفك أو جهازك، اضغط الزر أدناه لمتابعة جدول المباريات اليوم!</p>
-
-<button class="button" onclick="window.open('https://www.filgoal.com/matches/?date=2026-03-12','_blank')">
-  عرض المباريات اليوم
-</button>
-
-<div class="footer">
-*ستفتح صفحة جدول المباريات على FilGoal.
+<div class="search-section">
+    <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="matchSearch" placeholder="ابحث عن فريق أو دوري...">
+    </div>
 </div>
+
+<div class="date-nav">
+    <button class="date-btn" id="btn-yesterday">الأمس</button>
+    <button class="date-btn active" id="btn-today">اليوم</button>
+    <button class="date-btn" id="btn-tomorrow">الغد</button>
+</div>
+
+<div class="matches-container">
+    <div id="wg-api-football-games"
+         data-host="v3.football.api-sports.io"
+         data-key="be232a32b629a80272ceb0129ef1e243"
+         data-date=""
+         data-theme="dark"
+         data-refresh="60"
+         data-show-errors="false"
+         class="api_football_loader">
+    </div>
+</div>
+
+<nav class="bottom-nav">
+    <a href="https://romeo311020.github.io/romeo-live-tv-31/" class="nav-link">
+        <i class="fas fa-home"></i><span>الرئيسية</span>
+    </a>
+    <a href="#" class="nav-link active">
+        <i class="fas fa-trophy"></i><span>المباريات</span>
+    </a>
+    <a href="https://wa.me/201286716976" class="nav-link" target="_blank">
+        <i class="fab fa-whatsapp"></i><span>تواصل معنا</span>
+    </a>
+</nav>
+
+<script type="module" src="https://widgets.api-sports.io/football/1.1.8/widget.js"></script>
+
+<script>
+    const widget = document.getElementById('wg-api-football-games');
+
+    // وظيفة تغيير التاريخ
+    function setDate(daysOffset, btnId) {
+        const date = new Date();
+        date.setDate(date.getDate() + daysOffset);
+        const dateStr = date.toISOString().split('T')[0];
+        
+        // تحديث تاريخ الويدجت
+        widget.setAttribute('data-date', dateStr);
+        
+        // تحديث شكل الأزرار
+        document.querySelectorAll('.date-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(btnId).classList.add('active');
+        
+        // إعادة تحميل الويدجت (التريك السحري)
+        window.location.hash = dateStr;
+    }
+
+    document.getElementById('btn-yesterday').onclick = () => setDate(-1, 'btn-yesterday');
+    document.getElementById('btn-today').onclick = () => setDate(0, 'btn-today');
+    document.getElementById('btn-tomorrow').onclick = () => setDate(1, 'btn-tomorrow');
+
+    // تعيين تاريخ اليوم عند الفتح تلقائياً
+    window.onload = () => {
+        const today = new Date().toISOString().split('T')[0];
+        widget.setAttribute('data-date', today);
+    };
+</script>
 
 </body>
 </html>
