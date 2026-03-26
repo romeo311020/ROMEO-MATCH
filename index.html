@@ -16,18 +16,16 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        body { background: var(--bg); color: white; padding-bottom: 90px; }
+        body { background: var(--bg); color: white; padding-bottom: 90px; min-height: 100vh; }
 
-        /* Header & Brand */
         header {
             background: var(--card); padding: 20px 10px; text-align: center;
             border-bottom: 2px solid var(--accent); position: sticky; top: 0; z-index: 1000;
         }
         .logo-main { font-size: 26px; font-weight: 900; letter-spacing: 1px; color: white; }
         .logo-main span { color: var(--accent); }
-        .logo-sub { font-size: 16px; color: var(--text-gray); font-style: italic; font-family: serif; margin-top: -5px; display: block; }
+        .logo-sub { font-size: 16px; color: var(--text-gray); font-style: italic; margin-top: -5px; display: block; }
 
-        /* Search Bar */
         .search-section { padding: 15px 5%; }
         .search-box {
             position: relative; width: 100%; background: var(--card);
@@ -40,27 +38,23 @@
         }
         .search-box i { color: var(--accent); }
 
-        /* Date Navigation */
-        .date-nav {
-            display: flex; justify-content: space-around; padding: 10px 5%; gap: 10px;
-        }
+        .date-nav { display: flex; justify-content: space-around; padding: 10px 5%; gap: 10px; }
         .date-btn {
             flex: 1; background: var(--card); border: 1px solid rgba(229, 184, 11, 0.2);
-            color: white; padding: 10px; border-radius: 12px; cursor: pointer;
-            font-size: 13px; font-weight: bold; transition: 0.3s;
+            color: white; padding: 12px; border-radius: 12px; cursor: pointer;
+            font-size: 14px; font-weight: bold; transition: 0.3s;
         }
         .date-btn.active { background: var(--accent); color: black; border-color: var(--accent); }
 
-        /* Matches Grid */
         .matches-container { padding: 10px 5%; min-height: 400px; }
         
-        /* Widget Styling */
+        /* تحسين مظهر الويدجت */
         #wg-api-football-games {
             border-radius: 15px; overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: var(--card);
         }
 
-        /* Transparent Bottom Nav */
         .bottom-nav {
             position: fixed; bottom: 15px; left: 5%; right: 5%; height: 65px;
             background: var(--glass); backdrop-filter: blur(10px);
@@ -74,7 +68,6 @@
         }
         .nav-link i { font-size: 22px; display: block; margin-bottom: 4px; }
         .nav-link.active { color: var(--accent); }
-
     </style>
 </head>
 <body>
@@ -98,13 +91,14 @@
 </div>
 
 <div class="matches-container">
+    <!-- تم تفعيل عرض الأخطاء وإضافة متغير التاريخ الافتراضي -->
     <div id="wg-api-football-games"
          data-host="v3.football.api-sports.io"
          data-key="be232a32b629a80272ceb0129ef1e243"
          data-date=""
          data-theme="dark"
          data-refresh="60"
-         data-show-errors="false"
+         data-show-errors="true" 
          class="api_football_loader">
     </div>
 </div>
@@ -121,33 +115,41 @@
     </a>
 </nav>
 
+<!-- السكربت الرسمي للويدجت -->
 <script type="module" src="https://widgets.api-sports.io/football/1.1.8/widget.js"></script>
 
 <script>
     const widget = document.getElementById('wg-api-football-games');
 
-    // وظيفة تغيير التاريخ
+    function updateWidget(dateStr) {
+        // تحديث التاريخ في خاصية الداتا
+        widget.setAttribute('data-date', dateStr);
+        
+        // إعادة تهيئة الويدجت برمجياً ليقوم بسحب البيانات الجديدة
+        if (window.window.apiFootball && window.apiFootball.init) {
+            window.apiFootball.init();
+        } else {
+            // حل بديل في حال لم يتم تحميل السكربت بعد
+            location.reload(); 
+        }
+    }
+
     function setDate(daysOffset, btnId) {
         const date = new Date();
         date.setDate(date.getDate() + daysOffset);
         const dateStr = date.toISOString().split('T')[0];
         
-        // تحديث تاريخ الويدجت
-        widget.setAttribute('data-date', dateStr);
-        
-        // تحديث شكل الأزرار
         document.querySelectorAll('.date-btn').forEach(btn => btn.classList.remove('active'));
         document.getElementById(btnId).classList.add('active');
         
-        // إعادة تحميل الويدجت (التريك السحري)
-        window.location.hash = dateStr;
+        updateWidget(dateStr);
     }
 
     document.getElementById('btn-yesterday').onclick = () => setDate(-1, 'btn-yesterday');
     document.getElementById('btn-today').onclick = () => setDate(0, 'btn-today');
     document.getElementById('btn-tomorrow').onclick = () => setDate(1, 'btn-tomorrow');
 
-    // تعيين تاريخ اليوم عند الفتح تلقائياً
+    // تعيين تاريخ اليوم عند التشغيل الأول
     window.onload = () => {
         const today = new Date().toISOString().split('T')[0];
         widget.setAttribute('data-date', today);
