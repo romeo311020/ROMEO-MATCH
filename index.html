@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ROMEO LIVE TV | المركز الرياضي</title>
+    <!-- تحسين SEO (جديد) -->
+    <title>ROMEO LIVE TV | بث مباشر للمباريات والنتائج لحظة بلحظة</title>
+    <meta name="description" content="شاهد البث المباشر لأهم مباريات اليوم، نتائج مباشرة، وتشكيلات الفرق على ROMEO LIVE TV. خدمة سريعة ومجانية بدون إعلانات مزعجة.">
+    <meta name="keywords" content="بث مباشر، مباريات اليوم، كورة لايف، يلا شوت، روميو لايف">
+    
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         :root {
             --bg: #040714;
@@ -14,15 +19,15 @@
             --accent-gold: #e5b80b;
             --text-gray: #8e94a5;
             --glow: 0 0 15px rgba(255, 62, 62, 0.3);
-            --transition: all 0.3s ease;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: white; line-height: 1.4; overflow-x: hidden; }
+        body { background: var(--bg); color: white; line-height: 1.4; overflow-x: hidden; scroll-behavior: smooth; }
 
         /* --- الأنميشن --- */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .page { display: none; animation: fadeIn 0.4s ease forwards; padding-bottom: 30px; }
+        .page { display: none; animation: fadeIn 0.4s ease forwards; padding-bottom: 80px; }
         .page.active { display: block; }
 
         /* --- الهيدر العام --- */
@@ -31,7 +36,7 @@
         .logo-main span { color: var(--accent-red); }
         .logo-sub { font-size: 11px; color: var(--text-gray); display: block; margin-top: -3px; font-weight: 600; }
 
-        /* --- أزرار التاريخ (Compact) --- */
+        /* --- أزرار التاريخ --- */
         .date-nav { display: flex; justify-content: center; gap: 8px; padding: 15px 10px; background: var(--bg); }
         .date-btn { 
             background: var(--card); border: 1px solid rgba(255,255,255,0.05); color: var(--text-gray); 
@@ -39,16 +44,17 @@
         }
         .date-btn.active { background: var(--accent-red); color: white; border-color: var(--accent-red); box-shadow: var(--glow); }
 
-        /* --- كروت المباريات (Compact UI) --- */
+        /* --- كروت المباريات --- */
         .matches-list { padding: 0 10px; display: flex; flex-direction: column; gap: 10px; max-width: 600px; margin: 0 auto; }
         .match-card {
             background: var(--card); border-radius: 12px; padding: 12px; display: flex; align-items: center;
             text-decoration: none; color: white; border: 1px solid rgba(255,255,255,0.03); transition: var(--transition);
+            cursor: pointer;
         }
-        .match-card:hover { transform: scale(1.02); border-color: var(--accent-gold); }
+        .match-card:hover { transform: translateY(-3px); border-color: var(--accent-gold); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         
         .team-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-        .team-col img { width: 35px; height: 35px; object-fit: contain; }
+        .team-col img { width: 35px; height: 35px; object-fit: contain; loading: lazy; } /* تحسين الصور */
         .team-name-small { font-size: 11px; font-weight: 700; text-align: center; }
 
         .match-mid { flex: 0.8; text-align: center; }
@@ -57,16 +63,17 @@
         .status-live { color: #ff3e3e; border: 1px solid #ff3e3e; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% {opacity: 1} 50% {opacity: 0.5} 100% {opacity: 1} }
 
-        /* --- صفحة تفاصيل المباراة --- */
-        .match-details-header { background: linear-gradient(180deg, var(--card) 0%, var(--bg) 100%); padding: 25px 15px; text-align: center; }
+        /* --- تفاصيل المباراة --- */
+        .match-details-header { background: linear-gradient(180deg, var(--card) 0%, var(--bg) 100%); padding: 25px 15px; text-align: center; position: relative; }
         .details-teams { display: flex; align-items: center; justify-content: center; gap: 20px; }
-        .details-team img { width: 65px; height: 65px; margin-bottom: 10px; }
+        .details-team img { width: 65px; height: 65px; margin-bottom: 10px; loading: lazy; }
         .details-vs { font-size: 24px; font-weight: 900; color: var(--accent-gold); }
 
         .action-tabs { display: flex; gap: 10px; padding: 0 15px; max-width: 500px; margin: 0 auto 20px; }
         .tab-btn { 
             flex: 1; padding: 10px; border-radius: 10px; border: none; background: var(--card); color: white;
             font-weight: 700; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px;
+            transition: var(--transition);
         }
         .tab-btn.active { background: var(--accent-red); box-shadow: var(--glow); }
 
@@ -81,12 +88,45 @@
         .lineup-container { padding: 0 15px; max-width: 600px; margin: 0 auto; display: none; text-align: center; }
         .lineup-container.active { display: block; }
         .lineup-selector { display: flex; gap: 5px; justify-content: center; margin-bottom: 15px; }
-        .l-btn { padding: 5px 12px; font-size: 12px; border-radius: 5px; border: 1px solid var(--text-gray); background: none; color: white; cursor: pointer; }
+        .l-btn { padding: 5px 12px; font-size: 12px; border-radius: 5px; border: 1px solid var(--text-gray); background: none; color: white; cursor: pointer; transition: 0.3s; }
         .l-btn.active { background: var(--accent-gold); color: black; border-color: var(--accent-gold); }
-        .lineup-img { width: 100%; border-radius: 10px; display: none; margin-top: 10px; }
+        .lineup-img { width: 100%; border-radius: 10px; display: none; margin-top: 10px; loading: lazy; }
         .lineup-img.active { display: block; }
 
-        .back-btn { position: absolute; right: 15px; top: 15px; color: white; font-size: 20px; cursor: pointer; }
+        .back-btn { position: absolute; right: 15px; top: 15px; color: white; font-size: 20px; cursor: pointer; z-index: 10; }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+        /* 🚀 إضافات التحسين الاحترافية (CSS NEW) 🚀 */
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        /* قسم مباريات الآن */
+        .live-now-section { padding: 10px; margin-bottom: 5px; display: none; }
+        .live-now-section.has-matches { display: block; }
+        .live-title { font-size: 14px; color: var(--accent-red); font-weight: 800; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; padding-right: 10px; }
+        .live-card { background: linear-gradient(45deg, #1a2133, #0d111a); border: 1.5px solid var(--accent-red); margin-bottom: 10px; box-shadow: 0 0 10px rgba(255, 62, 62, 0.1); }
+
+        /* Skeleton Loader */
+        .skeleton { background: #1a2133; position: relative; overflow: hidden; height: 80px; border-radius: 12px; margin-bottom: 10px; }
+        .skeleton::after { content: ""; position: absolute; top: 0; right: 0; bottom: 0; left: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 100% { transform: translateX(100%); } }
+
+        /* Error Handling UI */
+        .error-box { text-align: center; padding: 40px 20px; display: none; }
+        .retry-btn { background: var(--accent-gold); color: black; border: none; padding: 8px 20px; border-radius: 8px; font-weight: bold; margin-top: 15px; cursor: pointer; }
+
+        /* سيرفرات البث */
+        .server-nav { display: flex; justify-content: center; gap: 8px; margin-top: 15px; flex-wrap: wrap; }
+        .srv-btn { background: #1a2133; color: white; border: 1px solid #333; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; transition: 0.3s; }
+        .srv-btn.active { background: var(--accent-gold); color: black; border-color: var(--accent-gold); }
+
+        /* Countdown */
+        .countdown { font-size: 10px; color: var(--accent-gold); margin-top: 4px; font-weight: bold; }
+
+        /* التذييل الثابت */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; padding: 10px; z-index: 1000; }
+        .nav-item { color: var(--text-gray); text-decoration: none; font-size: 10px; text-align: center; }
+        .nav-item.active { color: var(--accent-gold); }
+        .nav-item i { font-size: 18px; display: block; margin-bottom: 2px; }
 
     </style>
 </head>
@@ -98,18 +138,37 @@
     </header>
 
     <div id="homePage" class="page active">
+        <!-- قسم مباريات الآن (جديد) -->
+        <div id="liveNowSection" class="live-now-section">
+            <div class="live-title"><i class="fas fa-circle" style="font-size: 8px; animation: pulse 1s infinite;"></i> مباريات الآن</div>
+            <div id="liveContainer" class="matches-list"></div>
+        </div>
+
         <div class="date-nav">
             <button class="date-btn" onclick="filterMatches('yesterday', this)">الأمس</button>
             <button class="date-btn active" onclick="filterMatches('today', this)">اليوم</button>
             <button class="date-btn" onclick="filterMatches('tomorrow', this)">الغد</button>
         </div>
-        <div class="matches-list" id="matchesContainer">
-            </div>
+
+        <!-- Skeleton Loader (جديد) -->
+        <div id="loader" class="matches-list">
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+        </div>
+
+        <!-- Error Box (جديد) -->
+        <div id="errorBox" class="error-box">
+            <i class="fas fa-exclamation-triangle" style="font-size: 40px; color: var(--accent-red);"></i>
+            <p style="margin-top: 10px;">فشل تحميل المباريات، تأكد من اتصالك</p>
+            <button class="retry-btn" onclick="loadData()">إعادة المحاولة</button>
+        </div>
+
+        <div class="matches-list" id="matchesContainer"></div>
     </div>
 
     <div id="matchPage" class="page">
-        <div class="match-details-header" id="detailsHeader">
-            </div>
+        <div class="match-details-header" id="detailsHeader"></div>
 
         <div class="action-tabs">
             <button class="tab-btn active" onclick="toggleMatchSection('stream', this)">
@@ -121,8 +180,9 @@
         </div>
 
         <div id="streamSection" class="video-container active">
-            <div class="player-box" id="playerBox">
-                </div>
+            <div class="player-box" id="playerBox"></div>
+            <!-- أزرار السيرفرات (جديد) -->
+            <div id="serverNav" class="server-nav"></div>
         </div>
 
         <div id="lineupSection" class="lineup-container">
@@ -131,79 +191,227 @@
         </div>
     </div>
 
+    <!-- تذييل تنقل (جديد) -->
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active" onclick="showHome()"><i class="fas fa-home"></i><span>الرئيسية</span></a>
+        <a href="#" class="nav-item" onclick="filterMatches('today', document.querySelector('.date-btn.active'))"><i class="fas fa-calendar-day"></i><span>المباريات</span></a>
+        <a href="https://wa.me/201027675035" class="nav-item"><i class="fab fa-whatsapp"></i><span>واتساب</span></a>
+    </nav>
+
     <script>
-        const db = {
-            yesterday: [],
-            today: [],
-            tomorrow: []
-        };
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // 📌 الكود الأصلي المعدل بإضافات (JS)
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        
+        let db = { yesterday: [], today: [], tomorrow: [] };
+        let currentDay = 'today';
+        let countdownInterval;
+
+        // دالة تحميل البيانات مع Error Handling و Loading
+        async function loadData() {
+            const loader = document.getElementById('loader');
+            const container = document.getElementById('matchesContainer');
+            const errorBox = document.getElementById('errorBox');
+            
+            loader.style.display = 'flex';
+            container.innerHTML = '';
+            errorBox.style.display = 'none';
+
+            try {
+                const response = await fetch('matches.json?v=' + Date.now());
+                if (!response.ok) throw new Error();
+                const data = await response.json();
+                
+                db.yesterday = data.yesterday || [];
+                db.today = data.today || [];
+                db.tomorrow = data.tomorrow || [];
+
+                loader.style.display = 'none';
+                renderMatches(currentDay);
+                renderLiveNow(); // تحديث قسم "مباشر الآن"
+                startGlobalCountdowns();
+            } catch (err) {
+                loader.style.display = 'none';
+                errorBox.style.display = 'block';
+            }
+        }
 
         function renderMatches(day) {
             const container = document.getElementById('matchesContainer');
             container.innerHTML = '';
             
+            if (db[day].length === 0 && day === 'today') {
+                container.innerHTML = '<div style="text-align:center; padding:20px; color:gray;">لا توجد مباريات مجدولة</div>';
+                return;
+            }
+
             db[day].forEach(m => {
-                const statusHtml = m.status === 'live' ? '<span class="status-tag status-live">🔴 مباشر</span>' : (m.status === 'finished' ? '<span class="status-tag">✅ انتهت</span>' : '<span class="status-tag">⏳ لم تبدأ</span>');
-                
-                const card = document.createElement('div');
-                card.className = 'match-card';
-                card.onclick = () => openMatch(m);
-                card.innerHTML = `
-                    <div class="team-col">
-                        <img src="${m.team1.logo}">
-                        <span class="team-name-small">${m.team1.name}</span>
-                    </div>
-                    <div class="match-mid">
-                        ${statusHtml}
-                        <span class="vs-small">${m.result}</span>
-                    </div>
-                    <div class="team-col">
-                        <img src="${m.team2.logo}">
-                        <span class="team-name-small">${m.team2.name}</span>
-                    </div>
-                `;
+                const card = createMatchCard(m);
                 container.appendChild(card);
             });
         }
 
+        // إنشاء كرت مباراة (موحد لكل الأقسام)
+        function createMatchCard(m, isLiveSection = false) {
+            const statusHtml = m.status === 'live' ? 
+                '<span class="status-tag status-live">🔴 مباشر</span>' : 
+                (m.status === 'finished' ? '<span class="status-tag">✅ انتهت</span>' : '<span class="status-tag">⏳ لم تبدأ</span>');
+            
+            const card = document.createElement('div');
+            card.className = `match-card ${isLiveSection ? 'live-card' : ''}`;
+            card.onclick = () => {
+                // Debounce بسيط لمنع الضغط المتكرر
+                if(card.getAttribute('data-loading')) return;
+                card.setAttribute('data-loading', 'true');
+                openMatch(m);
+                setTimeout(() => card.removeAttribute('data-loading'), 500);
+            };
+
+            // حساب وقت البداية للـ Countdown
+            let countdownHtml = '';
+            if(m.status === 'scheduled' && m.time) {
+                countdownHtml = `<div class="countdown" data-time="${m.time}">--:--:--</div>`;
+            }
+
+            card.innerHTML = `
+                <div class="team-col">
+                    <img src="${m.team1.logo || 'https://via.placeholder.com/35'}" loading="lazy">
+                    <span class="team-name-small">${m.team1.name}</span>
+                </div>
+                <div class="match-mid">
+                    ${statusHtml}
+                    <span class="vs-small">${m.result || m.time}</span>
+                    ${countdownHtml}
+                </div>
+                <div class="team-col">
+                    <img src="${m.team2.logo || 'https://via.placeholder.com/35'}" loading="lazy">
+                    <span class="team-name-small">${m.team2.name}</span>
+                </div>
+            `;
+            return card;
+        }
+
+        // قسم مباريات الآن (جديد)
+        function renderLiveNow() {
+            const liveContainer = document.getElementById('liveContainer');
+            const liveSection = document.getElementById('liveNowSection');
+            const liveMatches = db.today.filter(m => m.status === 'live');
+            
+            liveContainer.innerHTML = '';
+            if (liveMatches.length > 0) {
+                liveSection.classList.add('has-matches');
+                liveMatches.forEach(m => {
+                    liveContainer.appendChild(createMatchCard(m, true));
+                });
+            } else {
+                liveSection.classList.remove('has-matches');
+            }
+        }
+
+        // العداد التنازلي (جديد)
+        function startGlobalCountdowns() {
+            if(countdownInterval) clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => {
+                document.querySelectorAll('.countdown').forEach(el => {
+                    const matchTime = el.getAttribute('data-time');
+                    const now = new Date();
+                    const [hours, minutes] = matchTime.split(':');
+                    const target = new Date();
+                    target.setHours(hours, minutes, 0);
+
+                    const diff = target - now;
+                    if (diff > 0) {
+                        const h = Math.floor(diff / 3600000);
+                        const m = Math.floor((diff % 3600000) / 60000);
+                        const s = Math.floor((diff % 60000) / 1000);
+                        el.innerText = `${h}:${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
+                    } else {
+                        el.innerText = "بدأت قريباً";
+                    }
+                });
+            }, 1000);
+        }
+
         function filterMatches(day, btn) {
+            currentDay = day;
             document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             renderMatches(day);
         }
 
+        // مشغل فيديو مطور (متعدد السيرفرات + ذكي)
         function openMatch(match) {
             document.getElementById('homePage').classList.remove('active');
             document.getElementById('matchPage').classList.add('active');
             window.scrollTo(0,0);
+            
+            // تحديث العنوان ديناميكياً SEO
+            document.title = `بث مباشر: ${match.team1.name} vs ${match.team2.name}`;
 
-            const statusLabel = match.status === 'live' ? 'بث مباشر الآن' : (match.status === 'finished' ? 'مباراة منتهية' : 'انتظروا بداية البث');
-            document.getElementById('detailsHeader').innerHTML = `
+            const header = document.getElementById('detailsHeader');
+            header.innerHTML = `
                 <i class="fas fa-arrow-right back-btn" onclick="showHome()"></i>
                 <div class="details-teams">
                     <div class="details-team"><img src="${match.team1.logo}"><div>${match.team1.name}</div></div>
-                    <div class="details-vs">${match.result}</div>
+                    <div class="details-vs">${match.result || 'VS'}</div>
                     <div class="details-team"><img src="${match.team2.logo}"><div>${match.team2.name}</div></div>
                 </div>
-                <div class="status-tag ${match.status==='live'?'status-live':''}" style="margin-top:15px; padding:5px 15px; font-size:12px;">${statusLabel}</div>
             `;
 
-            document.getElementById('playerBox').innerHTML = match.stream ? `<iframe src="${match.stream}" allowfullscreen></iframe>` : `<div style="padding:50px; text-align:center; color:gray;">البث غير متوفر حالياً</div>`;
+            // بناء أزرار السيرفرات
+            const srvNav = document.getElementById('serverNav');
+            srvNav.innerHTML = '';
+            
+            const servers = [
+                { name: 'سيرفر 1', url: match.stream },
+                { name: 'سيرفر 2', url: match.stream2 },
+                { name: 'سيرفر 3', url: match.stream3 }
+            ].filter(s => s.url);
 
+            servers.forEach((s, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `srv-btn ${idx === 0 ? 'active' : ''}`;
+                btn.innerText = s.name;
+                btn.onclick = () => loadServer(s.url, btn);
+                srvNav.appendChild(btn);
+            });
+
+            if(servers.length > 0) loadServer(servers[0].url);
+            else document.getElementById('playerBox').innerHTML = '<div style="padding:40px; text-align:center;">البث غير متوفر حالياً</div>';
+
+            // التشكيلة
             document.getElementById('lineupSelector').innerHTML = `
                 <button class="l-btn active" onclick="changeLineupImg(1, this)">${match.team1.name}</button>
                 <button class="l-btn" onclick="changeLineupImg(2, this)">${match.team2.name}</button>
             `;
             document.getElementById('lineupImages').innerHTML = `
-                <img src="${match.team1.lineup}" id="img-l-1" class="lineup-img active">
-                <img src="${match.team2.lineup}" id="img-l-2" class="lineup-img">
+                <img src="${match.team1.lineup || 'https://via.placeholder.com/400x600?text=Lineup+Unavailable'}" id="img-l-1" class="lineup-img active">
+                <img src="${match.team2.lineup || 'https://via.placeholder.com/400x600?text=Lineup+Unavailable'}" id="img-l-2" class="lineup-img">
             `;
+        }
+
+        function loadServer(url, btn = null) {
+            if(btn) {
+                document.querySelectorAll('.srv-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
+            
+            const box = document.getElementById('playerBox');
+            box.innerHTML = `<iframe src="${url}" allowfullscreen allow="autoplay; encrypted-media"></iframe>`;
+            
+            // تحويل تلقائي في حالة فشل السيرفر (اختياري عبر مراقبة الـ iframe)
+            const frame = box.querySelector('iframe');
+            frame.onerror = () => {
+                console.log("Server failed, trying next...");
+                // هنا يمكن إضافة منطق التحويل للسيرفر التالي
+            };
         }
 
         function showHome() {
             document.getElementById('matchPage').classList.remove('active');
             document.getElementById('homePage').classList.add('active');
             document.getElementById('playerBox').innerHTML = '';
+            document.title = "ROMEO LIVE TV | المركز الرياضي";
         }
 
         function toggleMatchSection(sec, btn) {
@@ -221,133 +429,9 @@
             document.getElementById('img-l-' + num).classList.add('active');
         }
 
-        window.onload = () => renderMatches('today');
+        // تشغيل التطبيق
+        window.onload = loadData;
+
     </script>
-
-    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-    <!-- 🚀 الأكواد الجديدة المضافة فقط (ADD ONLY) 🚀 -->
-    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-
-    <!-- 1. استايلات الشريط السفلي والإضافات -->
-    <style>
-        .bottom-nav-romeo {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--card);
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            border-top: 1px solid rgba(229, 184, 11, 0.2);
-            z-index: 2000;
-        }
-        .nav-item-romeo {
-            color: var(--text-gray);
-            text-decoration: none;
-            text-align: center;
-            font-size: 10px;
-            flex: 1;
-        }
-        .nav-item-romeo.active { color: var(--accent-gold); }
-        .nav-item-romeo i { display: block; font-size: 18px; margin-bottom: 2px; }
-
-        /* إضافة مساحة أسفل الصفحات لمنع اختفاء المحتوى خلف الشريط */
-        .page { padding-bottom: 80px !important; }
-
-        /* استايل السيرفرات المطور */
-        .srv-box-new { display: flex; justify-content: center; gap: 8px; padding: 15px; flex-wrap: wrap; }
-        .srv-btn-new { background: #1a2133; border: 1px solid #333; color: white; padding: 7px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; }
-        .srv-btn-new.active { background: var(--accent-gold); color: black; border-color: var(--accent-gold); }
-    </style>
-
-    <!-- 2. عنصر الشريط السفلي HTML -->
-    <nav class="bottom-nav-romeo">
-        <a href="javascript:void(0)" class="nav-item-romeo active" onclick="romeoGoHome(this)">
-            <i class="fas fa-home"></i> الرئيسية
-        </a>
-        <a href="javascript:void(0)" class="nav-item-romeo" onclick="romeoReload(this)">
-            <i class="fas fa-sync-alt"></i> تحديث
-        </a>
-        <a href="https://wa.me/201027675035" class="nav-item-romeo">
-            <i class="fab fa-whatsapp"></i> واتساب
-        </a>
-    </nav>
-
-    <!-- 3. الدوال البرمجية الجديدة (بدون لمس الدوال القديمة) -->
-    <script>
-        // دالة جلب البيانات من ملف خارجي (JSON) مع دعم تعدد السيرفرات
-        async function romeoFetchData() {
-            try {
-                const response = await fetch('matches.json?v=' + Date.now());
-                const data = await response.json();
-                
-                // تحديث قاعدة البيانات الأصلية بدون تغيير الكود القديم
-                db.yesterday = data.yesterday || [];
-                db.today = data.today || [];
-                db.tomorrow = data.tomorrow || [];
-
-                // استدعاء دالة الرسم الأصلية
-                renderMatches('today');
-            } catch (e) {
-                console.log("JSON Load Error");
-            }
-        }
-
-        // دالة العودة للرئيسية وتغيير حالة الشريط
-        function romeoGoHome(el) {
-            showHome(); // الدالة الأصلية
-            document.querySelectorAll('.nav-item-romeo').forEach(n => n.classList.remove('active'));
-            el.classList.add('active');
-        }
-
-        // دالة التحديث
-        function romeoReload(el) {
-            romeoFetchData();
-            el.style.animation = "spin 1s ease";
-            setTimeout(() => el.style.animation = "", 1000);
-        }
-
-        // تطوير مشغل البث لدعم السيرفرات المتعددة (إضافة فقط)
-        function romeoInjectServers(m) {
-            const playerArea = document.getElementById('streamSection');
-            const oldSrv = document.getElementById('romeoSrvArea');
-            if(oldSrv) oldSrv.remove();
-
-            const srvArea = document.createElement('div');
-            srvArea.id = "romeoSrvArea";
-            srvArea.className = "srv-box-new";
-
-            const links = [
-                {n: "سيرفر 1", u: m.stream},
-                {n: "سيرفر 2", u: m.stream2},
-                {n: "سيرفر 3", u: m.stream3}
-            ].filter(l => l.u);
-
-            links.forEach((link, i) => {
-                const btn = document.createElement('button');
-                btn.className = `srv-btn-new ${i===0?'active':''}`;
-                btn.innerText = link.n;
-                btn.onclick = function() {
-                    document.querySelectorAll('.srv-btn-new').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    document.getElementById('playerBox').innerHTML = `<iframe src="${link.u}" allowfullscreen></iframe>`;
-                };
-                srvArea.appendChild(btn);
-            });
-            playerArea.appendChild(srvArea);
-        }
-
-        // ربط الدالة الجديدة بفتح المباراة (Monkey Patching - إضافة سلوك دون تعديل الكود الأصلي)
-        const originalOpenMatch = openMatch;
-        openMatch = function(m) {
-            originalOpenMatch(m);
-            romeoInjectServers(m);
-        };
-
-        // تشغيل الجلب عند التحميل
-        window.addEventListener('load', romeoFetchData);
-    </script>
-
 </body>
 </html>
