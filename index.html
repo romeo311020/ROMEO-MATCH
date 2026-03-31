@@ -602,6 +602,10 @@
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <!-- 🚀 إضافة التعديلات الجديدة (Add Only) 🚀 -->
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+
     <style id="new-simple-styles">
         /* 1. حذف أزرار التواريخ نهائياً عبر التصميم */
         .date-nav, #liveNowSection { display: none !important; }
@@ -615,7 +619,7 @@
             font-size: calc(14px * var(--global-scale)); 
         }
 
-        /* تنسيق العنوان الرئيسي الجديد */
+        /* 2. تنسيق العنوان الرئيسي الجديد */
         .custom-main-title {
             text-align: center;
             font-size: 24px;
@@ -644,10 +648,17 @@
 
         .team-name-small { font-size: calc(11px * var(--global-scale)) !important; }
         .vs-small { font-size: calc(14px * var(--global-scale)) !important; }
+
+        /* تحسين إضافي للهيدر (تكبير الاسم) */
+        .logo-main {
+            font-size: calc(20px * var(--global-scale) * 1.2) !important;
+            transition: transform 0.3s ease;
+        }
+        .logo-main:hover { transform: scale(1.05); }
     </style>
 
     <script id="new-logic-add-only">
-        // 3. وظيفة دمج كافة المباريات في قائمة واحدة
+        // وظيفة دمج كافة المباريات في قائمة واحدة
         function renderAllMatchesSimple() {
             const container = document.getElementById('matchesContainer');
             if(!container) return;
@@ -665,11 +676,11 @@
                 const title = document.createElement('h2');
                 title.id = 'addedTitle';
                 title.className = 'custom-main-title';
-                title.innerText = 'المباريات ⚽👇';
+                title.innerText = 'شاهد المباريات بث مباشر';
                 container.parentNode.insertBefore(title, container);
             }
 
-            // دمج كل المصفوفات (yesterday, today, tomorrow)
+            // دمج كل المصفوفات (yesterday, today, tomorrow) في قائمة واحدة
             const allMatches = [...db.yesterday, ...db.today, ...db.tomorrow];
 
             if (allMatches.length === 0) {
@@ -677,23 +688,23 @@
                 return;
             }
 
-            // عرض المباريات المدمجة
+            // عرض المباريات المدمجة بالكامل
             allMatches.forEach(m => {
                 const card = createMatchCard(m);
                 container.appendChild(card);
             });
         }
 
-        // ربط الوظيفة الجديدة بنهاية عملية تحميل البيانات الأصلية (دون تعديلها)
-        const hookOriginalLoad = loadData;
+        // ربط الوظيفة الجديدة بنهاية عملية تحميل البيانات الأصلية دون تغييرها
+        const originalLoadData = loadData;
         loadData = async function() {
-            await hookOriginalLoad();
+            await originalLoadData();
             renderAllMatchesSimple();
         };
 
-        // تشغيل إضافي عند التحميل الأولي للتأكد من التنفيذ
+        // التأكد من التشغيل عند تحميل الصفحة
         window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(renderAllMatchesSimple, 800);
+            setTimeout(renderAllMatchesSimple, 1000);
         });
     </script>
 </body>
