@@ -1,22 +1,5 @@
 {
   "yesterday": [],
-  "today": [
-    {
-      "id": 1774989129309,
-      "team1": {
-        "name": "Ø§ÙØ¬ÙØªØ±Ø§ ",
-        "logo": "https://i.postimg.cc/mgqVvCw0/tnzyl.png",
-        "lineup": "https://i.postimg.cc/FRqhQsH1/Picsart-26-03-31-22-30-15-391.png"
-      },
-      "team2": {
-        "name": "Ø§ÙÙØ§Ø¨Ø§Ù",
-        "logo": "https://i.postimg.cc/7PV9xp9K/images.png",
-        "lineup": ""
-      },
-      "status": "live",
-      "link": "https://p3.panda-live.online/albaplayer/bein-6/",
-      "link2": ""
-    }
-  ],
+  "today": [],
   "tomorrow": []
 }
