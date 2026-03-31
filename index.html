@@ -601,5 +601,85 @@
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+    <style>
+        /* 1. حذف أزرار التواريخ من الواجهة نهائياً */
+        .date-nav { display: none !important; }
+
+        /* 2. تحسين العنوان الرئيسي وتكبير التصميم بنسبة 8% تقريباً */
+        :root {
+            --global-scale: 1.08; /* تكبير خفيف بنسبة 8% */
+        }
+
+        body { font-size: calc(14px * var(--global-scale)); }
+
+        .main-matches-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 900;
+            margin: 25px 0 15px;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.1);
+        }
+
+        /* تكبير الكروت والمسافات */
+        .match-card {
+            padding: 16px !important;
+            margin-bottom: 12px !important;
+            transform-origin: center;
+        }
+
+        .team-col img { width: 42px !important; height: 42px !important; }
+        .team-name-small { font-size: 13px !important; }
+        .vs-small { font-size: 16px !important; }
+    </style>
+
+    <script>
+        // 3. وظيفة جديدة لعرض كل المباريات مدمجة (All-in-One)
+        // نقوم بتعريف دالة جديدة لا تلمس الدوال القديمة بل تعمل بشكل متوازي أو بعد تحميل البيانات
+        
+        function renderAllMatchesCombined() {
+            const container = document.getElementById('matchesContainer');
+            if(!container) return;
+
+            // ننتظر تحميل البيانات في db أولاً
+            if (!db.today.length && !db.yesterday.length && !db.tomorrow.length) {
+                setTimeout(renderAllMatchesCombined, 500);
+                return;
+            }
+
+            container.innerHTML = '';
+            
+            // إضافة العنوان الجديد برمجياً قبل القائمة
+            const title = document.createElement('h2');
+            title.className = 'main-matches-title';
+            title.innerText = 'المباريات ⚽👇';
+            container.parentNode.insertBefore(title, container);
+
+            // دمج كل المصفوفات
+            const allMatches = [...db.yesterday, ...db.today, ...db.tomorrow];
+
+            if (allMatches.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:20px; color:gray;">لا توجد مباريات متاحة حالياً</div>';
+                return;
+            }
+
+            allMatches.forEach(m => {
+                const card = createMatchCard(m);
+                container.appendChild(card);
+            });
+
+            // إخفاء قسم "مباريات الآن" القديم لتجنب التكرار إذا كان مدمجاً
+            const liveSec = document.getElementById('liveNowSection');
+            if(liveSec) liveSec.style.display = 'none';
+        }
+
+        // تشغيل الدالة الجديدة بعد انتهاء LoadData الأصلية
+        const originalLoadData = loadData;
+        loadData = async function() {
+            await originalLoadData();
+            renderAllMatchesCombined();
+        };
+    </script>
 </body>
 </html>
