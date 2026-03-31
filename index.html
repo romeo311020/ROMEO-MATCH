@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- تحسين SEO (جديد) -->
     <title>ROMEO LIVE TV | بث مباشر للمباريات والنتائج لحظة بلحظة</title>
     <meta name="description" content="شاهد البث المباشر لأهم مباريات اليوم، نتائج مباشرة، وتشكيلات الفرق على ROMEO LIVE TV. خدمة سريعة ومجانية بدون إعلانات مزعجة.">
     <meta name="keywords" content="بث مباشر، مباريات اليوم، كورة لايف، يلا شوت، روميو لايف">
@@ -138,7 +137,6 @@
     </header>
 
     <div id="homePage" class="page active">
-        <!-- قسم مباريات الآن (جديد) -->
         <div id="liveNowSection" class="live-now-section">
             <div class="live-title"><i class="fas fa-circle" style="font-size: 8px; animation: pulse 1s infinite;"></i> مباريات الآن</div>
             <div id="liveContainer" class="matches-list"></div>
@@ -150,14 +148,12 @@
             <button class="date-btn" onclick="filterMatches('tomorrow', this)">الغد</button>
         </div>
 
-        <!-- Skeleton Loader (جديد) -->
         <div id="loader" class="matches-list">
             <div class="skeleton"></div>
             <div class="skeleton"></div>
             <div class="skeleton"></div>
         </div>
 
-        <!-- Error Box (جديد) -->
         <div id="errorBox" class="error-box">
             <i class="fas fa-exclamation-triangle" style="font-size: 40px; color: var(--accent-red);"></i>
             <p style="margin-top: 10px;">فشل تحميل المباريات، تأكد من اتصالك</p>
@@ -181,7 +177,6 @@
 
         <div id="streamSection" class="video-container active">
             <div class="player-box" id="playerBox"></div>
-            <!-- أزرار السيرفرات (جديد) -->
             <div id="serverNav" class="server-nav"></div>
         </div>
 
@@ -191,7 +186,6 @@
         </div>
     </div>
 
-    <!-- تذييل تنقل (جديد) -->
     <nav class="bottom-nav">
         <a href="#" class="nav-item active" onclick="showHome()"><i class="fas fa-home"></i><span>الرئيسية</span></a>
         <a href="#" class="nav-item" onclick="filterMatches('today', document.querySelector('.date-btn.active'))"><i class="fas fa-calendar-day"></i><span>المباريات</span></a>
@@ -269,8 +263,8 @@
 
             // حساب وقت البداية للـ Countdown
             let countdownHtml = '';
-            if(m.status === 'scheduled' && m.time) {
-                countdownHtml = `<div class="countdown" data-time="${m.time}">--:--:--</div>`;
+            if(m.status === 'not_started' && m.time) {
+                countdownHtml = `<div class="countdown" data-time="${m.time}">${m.time}</div>`;
             }
 
             card.innerHTML = `
@@ -280,7 +274,7 @@
                 </div>
                 <div class="match-mid">
                     ${statusHtml}
-                    <span class="vs-small">${m.result || m.time}</span>
+                    <span class="vs-small">${m.result || m.time || 'VS'}</span>
                     ${countdownHtml}
                 </div>
                 <div class="team-col">
@@ -339,13 +333,15 @@
             renderMatches(day);
         }
 
-        // مشغل فيديو مطور (متعدد السيرفرات + ذكي)
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // 🚀 المشغل الذكي الجديد (Smart Multi-Link Player) 🚀
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
         function openMatch(match) {
             document.getElementById('homePage').classList.remove('active');
             document.getElementById('matchPage').classList.add('active');
             window.scrollTo(0,0);
             
-            // تحديث العنوان ديناميكياً SEO
             document.title = `بث مباشر: ${match.team1.name} vs ${match.team2.name}`;
 
             const header = document.getElementById('detailsHeader');
@@ -358,28 +354,26 @@
                 </div>
             `;
 
-            // بناء أزرار السيرفرات
             const srvNav = document.getElementById('serverNav');
             srvNav.innerHTML = '';
             
+            // جلب الروابط من لوحة التحكم (stream, stream2, stream3 أو link, link2)
             const servers = [
-                { name: 'سيرفر 1', url: match.stream },
-                { name: 'سيرفر 2', url: match.stream2 },
-                { name: 'سيرفر 3', url: match.stream3 }
+                { name: 'سيرفر 1', url: match.stream || match.link },
+                { name: 'سيرفر 2', url: match.stream2 || match.link2 }
             ].filter(s => s.url);
 
             servers.forEach((s, idx) => {
                 const btn = document.createElement('button');
                 btn.className = `srv-btn ${idx === 0 ? 'active' : ''}`;
                 btn.innerText = s.name;
-                btn.onclick = () => loadServer(s.url, btn);
+                btn.onclick = () => loadSmartPlayer(s.url, btn);
                 srvNav.appendChild(btn);
             });
 
-            if(servers.length > 0) loadServer(servers[0].url);
+            if(servers.length > 0) loadSmartPlayer(servers[0].url);
             else document.getElementById('playerBox').innerHTML = '<div style="padding:40px; text-align:center;">البث غير متوفر حالياً</div>';
 
-            // التشكيلة
             document.getElementById('lineupSelector').innerHTML = `
                 <button class="l-btn active" onclick="changeLineupImg(1, this)">${match.team1.name}</button>
                 <button class="l-btn" onclick="changeLineupImg(2, this)">${match.team2.name}</button>
@@ -390,21 +384,59 @@
             `;
         }
 
-        function loadServer(url, btn = null) {
+        // نظام التشغيل الذكي: يحدد نوع الرابط ويشغله بالتقنية المناسبة
+        function loadSmartPlayer(url, btn = null) {
             if(btn) {
                 document.querySelectorAll('.srv-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
             }
             
             const box = document.getElementById('playerBox');
-            box.innerHTML = `<iframe src="${url}" allowfullscreen allow="autoplay; encrypted-media"></iframe>`;
-            
-            // تحويل تلقائي في حالة فشل السيرفر (اختياري عبر مراقبة الـ iframe)
-            const frame = box.querySelector('iframe');
-            frame.onerror = () => {
-                console.log("Server failed, trying next...");
-                // هنا يمكن إضافة منطق التحويل للسيرفر التالي
-            };
+            box.innerHTML = ''; // تنظيف المشغل
+
+            // 1. فحص روابط الفيديو المباشرة (m3u8 أو mp4)
+            if (url.includes('.m3u8') || url.includes('.mp4')) {
+                const video = document.createElement('video');
+                video.controls = true;
+                video.autoplay = true;
+                video.style.width = '100%';
+                video.style.height = '100%';
+                video.style.position = 'absolute';
+                video.style.top = '0';
+                video.style.left = '0';
+                
+                if (url.includes('.m3u8')) {
+                    // دعم HLS عبر مكتبة hls.js إذا كانت متوفرة أو عبر المشغل الافتراضي
+                    if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+                        const hls = new Hls();
+                        hls.loadSource(url);
+                        hls.attachMedia(video);
+                    } else {
+                        video.src = url;
+                    }
+                } else {
+                    video.src = url;
+                }
+                box.appendChild(video);
+            } 
+            // 2. فحص روابط اليوتيوب أو iframe أو الصفحات الخارجية
+            else {
+                const iframe = document.createElement('iframe');
+                iframe.allowFullscreen = true;
+                iframe.allow = "autoplay; encrypted-media";
+                
+                // إذا كان الرابط يوتيوب عادي وليس embed، نقوم بتحويله
+                if (url.includes('youtube.com/watch?v=')) {
+                    const vidId = url.split('v=')[1].split('&')[0];
+                    url = `https://www.youtube.com/embed/${vidId}`;
+                } else if (url.includes('youtu.be/')) {
+                    const vidId = url.split('youtu.be/')[1];
+                    url = `https://www.youtube.com/embed/${vidId}`;
+                }
+                
+                iframe.src = url;
+                box.appendChild(iframe);
+            }
         }
 
         function showHome() {
@@ -429,9 +461,9 @@
             document.getElementById('img-l-' + num).classList.add('active');
         }
 
-        // تشغيل التطبيق
         window.onload = loadData;
 
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </body>
 </html>

@@ -338,5 +338,101 @@
             location.reload();
         }
     </script>
+
+    <style>
+        /* إخفاء حقل التحميل نهائياً */
+        #mDownload { display: none !important; }
+        
+        /* تحسين مظهر حقل الوقت الجديد ليناسب التصميم */
+        .time-group { margin-top: 10px; display: none; transition: 0.3s; }
+        .time-group.visible { display: block; }
+    </style>
+
+    <script>
+        (function() {
+            // 1. حقن حقل الوقت الجديد برمجياً داخل واجهة الـ Form
+            const statusSelect = document.getElementById('mStatus');
+            const timeFieldHTML = `
+                <div id="matchTimeContainer" class="time-group">
+                    <label>وقت بداية المباراة (إلزامي)</label>
+                    <input type="time" id="mTime" style="margin-bottom:0;">
+                </div>
+            `;
+            statusSelect.insertAdjacentHTML('afterend', timeFieldHTML);
+
+            const timeContainer = document.getElementById('matchTimeContainer');
+            const timeInput = document.getElementById('mTime');
+
+            // 2. دالة التحكم في إظهار/إخفاء الحقول
+            function handleStatusChange() {
+                if (statusSelect.value === 'not_started') {
+                    timeContainer.classList.add('visible');
+                    timeInput.setAttribute('required', 'true');
+                } else {
+                    timeContainer.classList.remove('visible');
+                    timeInput.removeAttribute('required');
+                    timeInput.value = ""; // مسح القيمة عند تغيير الحالة
+                }
+            }
+
+            // 3. ربط الحدث عند تغيير الحالة
+            statusSelect.addEventListener('change', handleStatusChange);
+
+            // 4. اعتراض دالة saveMatch الأصلية لتصحيح البيانات قبل الإرسال
+            const originalSaveMatch = window.saveMatch;
+            window.saveMatch = function() {
+                // التحقق من الوقت إذا كانت الحالة "لم تبدأ"
+                if (statusSelect.value === 'not_started' && !timeInput.value) {
+                    alert("برجاء إدخال وقت المباراة");
+                    return;
+                }
+
+                // استدعاء الدالة الأصلية
+                return originalSaveMatch.apply(this, arguments);
+            };
+
+            // 5. اعتراض دالة syncWithGithub لضمان توافق البيانات والحذف النهائي
+            const originalSync = window.syncWithGithub;
+            window.syncWithGithub = async function() {
+                // تعديل البيانات في مصفوفة ALL_MATCHES قبل المزامنة
+                ['yesterday', 'today', 'tomorrow'].forEach(day => {
+                    ALL_MATCHES[day] = ALL_MATCHES[day].map(match => {
+                        // حذف حقل التحميل من البيانات
+                        delete match.download_url;
+                        
+                        // إضافة وقت المباراة للـ Object الحالي من الـ Input
+                        if (match.id == document.getElementById('matchId').value) {
+                            match.time = (statusSelect.value === 'not_started') ? timeInput.value : "";
+                        }
+                        return match;
+                    });
+                });
+                return originalSync.apply(this, arguments);
+            };
+
+            // 6. اعتراض دالة editMatch لملء حقل الوقت عند التعديل
+            const originalEditMatch = window.editMatch;
+            window.editMatch = function(id) {
+                originalEditMatch(id);
+                const all = [...ALL_MATCHES.yesterday, ...ALL_MATCHES.today, ...ALL_MATCHES.tomorrow];
+                const m = all.find(x => x.id === id);
+                if (m && m.time) {
+                    timeInput.value = m.time;
+                } else {
+                    timeInput.value = "";
+                }
+                handleStatusChange(); // لتحديث الظهور/الإخفاء فوراً
+            };
+
+            // 7. اعتراض دالة openForm لتصفير حقل الوقت
+            const originalOpenForm = window.openForm;
+            window.openForm = function() {
+                originalOpenForm();
+                timeInput.value = "";
+                handleStatusChange();
+            };
+
+        })();
+    </script>
 </body>
 </html>
