@@ -48,6 +48,22 @@
       "status": "not_started",
       "link": "",
       "link2": ""
+    },
+    {
+      "id": 1774993244121,
+      "team1": {
+        "name": "بلجيكا",
+        "logo": "https://i.postimg.cc/qvxPccWr/2373.png",
+        "lineup": ""
+      },
+      "team2": {
+        "name": "المكسيك",
+        "logo": "https://i.postimg.cc/Xv2tmjVD/5106.png",
+        "lineup": ""
+      },
+      "status": "not_started",
+      "link": "",
+      "link2": ""
     }
   ],
   "tomorrow": []
