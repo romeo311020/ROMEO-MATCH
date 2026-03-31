@@ -1,23 +1,6 @@
 {
   "yesterday": [],
-  "today": [
-    {
-      "id": 202,
-      "team1": {
-        "name": "ÙØ§ÙØ´Ø³ØªØ± Ø³ÙØªÙ",
-        "logo": "https://crests.football-data.org/65.png",
-        "lineup": "https://placehold.co/600x400/121826/white?text=City+Lineup"
-      },
-      "team2": {
-        "name": "ÙÙÙØ±Ø¨ÙÙ",
-        "logo": "https://crests.football-data.org/64.png",
-        "lineup": "https://placehold.co/600x400/121826/white?text=Liverpool+Lineup"
-      },
-      "status": "not_started",
-      "result": "VS",
-      "stream": "https://www.youtube.com/embed/dQw4w9WgXcQ"
-    }
-  ],
+  "today": [],
   "tomorrow": [
     {
       "id": 301,
