@@ -602,61 +602,74 @@
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
-    <style>
-        /* 1. حذف أزرار التواريخ من الواجهة نهائياً */
-        .date-nav { display: none !important; }
+    <style id="new-simple-styles">
+        /* 1. حذف أزرار التواريخ نهائياً عبر التصميم */
+        .date-nav, #liveNowSection { display: none !important; }
 
-        /* 2. تحسين العنوان الرئيسي وتكبير التصميم بنسبة 8% تقريباً */
+        /* 2. تكبير التصميم بنسبة 8% تقريباً (Scale) */
         :root {
-            --global-scale: 1.08; /* تكبير خفيف بنسبة 8% */
+            --global-scale: 1.08;
+        }
+        
+        body { 
+            font-size: calc(14px * var(--global-scale)); 
         }
 
-        body { font-size: calc(14px * var(--global-scale)); }
-
-        .main-matches-title {
+        /* تنسيق العنوان الرئيسي الجديد */
+        .custom-main-title {
             text-align: center;
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 900;
-            margin: 25px 0 15px;
             color: #fff;
+            margin: 30px 0 20px 0;
+            display: block;
             text-shadow: 0 0 10px rgba(255,255,255,0.1);
         }
 
-        /* تكبير الكروت والمسافات */
+        /* تكبير الكروت والمسافات بما يناسب الـ Scale الجديد */
         .match-card {
-            padding: 16px !important;
-            margin-bottom: 12px !important;
-            transform-origin: center;
+            padding: calc(12px * var(--global-scale)) !important;
+            margin-bottom: 10px !important;
         }
 
-        .team-col img { width: 42px !important; height: 42px !important; }
-        .team-name-small { font-size: 13px !important; }
-        .vs-small { font-size: 16px !important; }
+        .matches-list {
+            gap: 12px !important;
+            padding-top: 10px;
+        }
+
+        .team-col img { 
+            width: calc(35px * var(--global-scale)) !important; 
+            height: calc(35px * var(--global-scale)) !important; 
+        }
+
+        .team-name-small { font-size: calc(11px * var(--global-scale)) !important; }
+        .vs-small { font-size: calc(14px * var(--global-scale)) !important; }
     </style>
 
-    <script>
-        // 3. وظيفة جديدة لعرض كل المباريات مدمجة (All-in-One)
-        // نقوم بتعريف دالة جديدة لا تلمس الدوال القديمة بل تعمل بشكل متوازي أو بعد تحميل البيانات
-        
-        function renderAllMatchesCombined() {
+    <script id="new-logic-add-only">
+        // 3. وظيفة دمج كافة المباريات في قائمة واحدة
+        function renderAllMatchesSimple() {
             const container = document.getElementById('matchesContainer');
             if(!container) return;
 
-            // ننتظر تحميل البيانات في db أولاً
+            // ننتظر حتى تكتمل البيانات في db أولاً
             if (!db.today.length && !db.yesterday.length && !db.tomorrow.length) {
-                setTimeout(renderAllMatchesCombined, 500);
+                setTimeout(renderAllMatchesSimple, 500);
                 return;
             }
 
             container.innerHTML = '';
             
-            // إضافة العنوان الجديد برمجياً قبل القائمة
-            const title = document.createElement('h2');
-            title.className = 'main-matches-title';
-            title.innerText = 'المباريات ⚽👇';
-            container.parentNode.insertBefore(title, container);
+            // إضافة العنوان الرئيسي الجديد أعلى القائمة
+            if(!document.getElementById('addedTitle')) {
+                const title = document.createElement('h2');
+                title.id = 'addedTitle';
+                title.className = 'custom-main-title';
+                title.innerText = 'المباريات ⚽👇';
+                container.parentNode.insertBefore(title, container);
+            }
 
-            // دمج كل المصفوفات
+            // دمج كل المصفوفات (yesterday, today, tomorrow)
             const allMatches = [...db.yesterday, ...db.today, ...db.tomorrow];
 
             if (allMatches.length === 0) {
@@ -664,22 +677,24 @@
                 return;
             }
 
+            // عرض المباريات المدمجة
             allMatches.forEach(m => {
                 const card = createMatchCard(m);
                 container.appendChild(card);
             });
-
-            // إخفاء قسم "مباريات الآن" القديم لتجنب التكرار إذا كان مدمجاً
-            const liveSec = document.getElementById('liveNowSection');
-            if(liveSec) liveSec.style.display = 'none';
         }
 
-        // تشغيل الدالة الجديدة بعد انتهاء LoadData الأصلية
-        const originalLoadData = loadData;
+        // ربط الوظيفة الجديدة بنهاية عملية تحميل البيانات الأصلية (دون تعديلها)
+        const hookOriginalLoad = loadData;
         loadData = async function() {
-            await originalLoadData();
-            renderAllMatchesCombined();
+            await hookOriginalLoad();
+            renderAllMatchesSimple();
         };
+
+        // تشغيل إضافي عند التحميل الأولي للتأكد من التنفيذ
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(renderAllMatchesSimple, 800);
+        });
     </script>
 </body>
 </html>
