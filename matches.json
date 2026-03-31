@@ -2,22 +2,6 @@
   "yesterday": [],
   "today": [
     {
-      "id": 201,
-      "team1": {
-        "name": "Ø±ÙØ§Ù ÙØ¯Ø±ÙØ¯",
-        "logo": "https://crests.football-data.org/86.png",
-        "lineup": "https://pbs.twimg.com/media/GH0_Qj6W4AA6D_V.jpg"
-      },
-      "team2": {
-        "name": "Ø¨Ø±Ø´ÙÙÙØ©",
-        "logo": "https://crests.football-data.org/81.png",
-        "lineup": "https://pbs.twimg.com/media/F9XJ7xZWAAA6Y6Y.jpg"
-      },
-      "status": "live",
-      "result": "1 - 0",
-      "stream": "https://www.youtube.com/embed/dQw4w9WgXcQ"
-    },
-    {
       "id": 202,
       "team1": {
         "name": "ÙØ§ÙØ´Ø³ØªØ± Ø³ÙØªÙ",
