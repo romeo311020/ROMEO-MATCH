@@ -133,7 +133,7 @@
 
     <script>
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // 📌 1. نظام البيانات (تم تصفيره ليعتمد على JSON)
+        // 📌 1. نظام البيانات (تم تصفيره للاستلام من JSON)
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         const db = {
             yesterday: [],
@@ -241,126 +241,128 @@
     </script>
 
     <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-    <!-- 🧩 إضافات الربط والإصلاح الشامل (Add Only) 🧩 -->
+    <!-- 🚀 كود الإصلاح النهائي (Add Only) 🚀 -->
     <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
     <style>
-        /* شريط سفلي مربع وشفاف احترافي */
-        .bottom-nav-romeo {
-            position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
-            width: 94%; max-width: 460px; height: 60px;
-            background: rgba(18, 24, 38, 0.8); backdrop-filter: blur(15px);
-            border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex; justify-content: space-around; align-items: center;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); z-index: 9999;
+        /* الشريط السفلي الاحترافي */
+        .romeo-bottom-bar {
+            position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%);
+            width: 92%; max-width: 440px; height: 60px;
+            background: rgba(18, 24, 38, 0.9); backdrop-filter: blur(10px);
+            border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex; justify-content: space-around; align-items: center; z-index: 10000;
         }
-        .nav-link { color: #8e94a5; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 4px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .nav-link i { font-size: 19px; }
-        .nav-link span { font-size: 10px; }
-        .nav-link.active { color: var(--accent-gold); }
+        .bar-item { color: #8e94a5; text-decoration: none; text-align: center; font-size: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .bar-item i { font-size: 20px; display: block; margin-bottom: 3px; }
+        .bar-item.active { color: var(--accent-gold); }
 
-        /* حاوية السيرفرات */
-        .servers-container { display: flex; gap: 8px; justify-content: center; padding: 12px; flex-wrap: wrap; }
-        .srv-button { background: #1a2133; border: 1px solid #333; color: white; padding: 7px 18px; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; }
-        .srv-button.active { background: var(--accent-gold); color: #000; border-color: var(--accent-gold); }
-        .romeo-video-frame { width: 100%; height: 100%; position: absolute; top:0; left:0; border:0; background: #000; }
+        /* أزرار تبديل السيرفرات */
+        .srv-tabs { display: flex; gap: 10px; justify-content: center; padding: 10px; }
+        .srv-node { background: #1a2133; border: 1px solid #333; color: white; padding: 7px 20px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; }
+        .srv-node.active { background: var(--accent-gold); color: black; border-color: var(--accent-gold); }
+        .romeo-frame { width: 100%; height: 100%; position: absolute; top:0; left:0; border:0; background: #000; }
     </style>
 
-    <div class="bottom-nav-romeo">
-        <a href="https://romeo311020.github.io/romeo-live-tv-31/" class="nav-link">
+    <div class="romeo-bottom-bar">
+        <a href="https://romeo311020.github.io/romeo-live-tv-31/" class="bar-item">
             <i class="fas fa-home"></i><span>الرئيسية</span>
         </a>
-        <div class="nav-link active" onclick="location.reload()">
+        <div class="bar-item active" onclick="location.reload()">
             <i class="fas fa-futbol"></i><span>المباريات</span>
         </div>
-        <a href="https://wa.me/201027675035" target="_blank" class="nav-link">
+        <a href="https://wa.me/201027675035" target="_blank" class="bar-item">
             <i class="fab fa-whatsapp"></i><span>واتساب</span>
         </a>
     </div>
 
     <script>
-        // دالة تحويل روابط يوتيوب إلى Embed لضمان التشغيل[span_4](start_span)[span_4](end_span)[span_5](start_span)[span_5](end_span)
-        function getEmbedUrl(url) {
+        // 1. مُصلح روابط يوتيوب التلقائي (يمنع السواد)[span_6](start_span)[span_6](end_span)[span_7](start_span)[span_7](end_span)
+        function romeoFixUrl(url) {
             if (!url) return "";
-            if (url.includes("youtube.com/watch?v=")) {
-                const id = url.split("v=")[1].split("&")[0];
-                return `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
-            } else if (url.includes("youtu.be/")) {
-                const id = url.split("be/")[1].split("?")[0];
-                return `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
-            }
-            return url;
+            let id = "";
+            if (url.includes("v=")) id = url.split("v=")[1].split("&")[0];
+            else if (url.includes("youtu.be/")) id = url.split("be/")[1].split("?")[0];
+            else if (url.includes("embed/")) return url; // إذا كان جاهزاً
+
+            return id ? `https://www.youtube.com/embed/${id}?autoplay=1&rel=0` : url;
         }
 
-        // محرك تشغيل الفيديو المتقدم[span_6](start_span)[span_6](end_span)
-        function romeoEngine(link) {
+        // 2. مشغل الفيديو الذكي[span_8](start_span)[span_8](end_span)
+        function romeoPlay(url) {
             const box = document.getElementById('playerBox');
             box.innerHTML = "";
-            const finalLink = getEmbedUrl(link);
+            const final = romeoFixUrl(url);
 
-            if (finalLink.includes(".m3u8")) {
-                const v = document.createElement('video');
-                v.className = "romeo-video-frame"; v.controls = true; v.autoplay = true;
-                box.appendChild(v);
+            if (final.includes(".m3u8")) {
+                const vid = document.createElement('video');
+                vid.className = "romeo-frame"; vid.controls = true; vid.autoplay = true;
+                box.appendChild(vid);
                 if (Hls.isSupported()) {
-                    const h = new Hls(); h.loadSource(finalLink); h.attachMedia(v);
-                } else { v.src = finalLink; }
+                    const h = new Hls(); h.loadSource(final); h.attachMedia(vid);
+                } else { vid.src = final; }
             } else {
-                box.innerHTML = `<iframe class="romeo-video-frame" src="${finalLink}" allowfullscreen allow="autoplay"></iframe>`;
+                box.innerHTML = `<iframe class="romeo-frame" src="${final}" allowfullscreen allow="autoplay"></iframe>`;
             }
         }
 
-        // اعتراض دالة الفتح لإضافة السيرفرات ومعالجة الروابط[span_7](start_span)[span_7](end_span)
-        const nativeOpen = openMatch;
+        // 3. اعتراض دالة الفتح لإصلاح undefined وإضافة السيرفرات[span_9](start_span)[span_9](end_span)
+        const originalOpen = openMatch;
         openMatch = function(m) {
-            nativeOpen(m);
-            
-            const area = document.getElementById('streamSection');
-            const oldButtons = document.querySelector('.servers-container');
-            if (oldButtons) oldButtons.remove();
-
-            const btnsWrap = document.createElement('div');
-            btnsWrap.className = 'servers-container';
-            
-            // سيرفر 1
-            const s1 = document.createElement('button');
-            s1.className = 'srv-button active'; s1.innerText = 'سيرفر 1';
-            s1.onclick = function() { 
-                document.querySelectorAll('.srv-button').forEach(x => x.classList.remove('active'));
-                this.classList.add('active'); romeoEngine(m.stream); 
+            // توحيد المسميات لمنع ظهور undefined[span_10](start_span)[span_10](end_span)[span_11](start_span)[span_11](end_span)
+            const fixedMatch = {
+                ...m,
+                team1: m.team1 || m.home_team || { name: "غير متوفر", logo: "" },
+                team2: m.team2 || m.away_team || { name: "غير متوفر", logo: "" },
+                result: m.result || m.time || "VS"
             };
-            btnsWrap.appendChild(s1);
 
-            // سيرفر 2
-            if (m.stream2) {
-                const s2 = document.createElement('button');
-                s2.className = 'srv-button'; s2.innerText = 'سيرفر 2';
-                s2.onclick = function() { 
-                    document.querySelectorAll('.srv-button').forEach(x => x.classList.remove('active'));
-                    this.classList.add('active'); romeoEngine(m.stream2); 
+            originalOpen(fixedMatch); // رسم الصفحة بالكود القديم
+
+            const container = document.getElementById('streamSection');
+            const oldSrv = document.querySelector('.srv-tabs');
+            if (oldSrv) oldSrv.remove();
+
+            const wrap = document.createElement('div');
+            wrap.className = 'srv-tabs';
+
+            const b1 = document.createElement('button');
+            b1.className = 'srv-node active'; b1.innerText = 'سيرفر 1';
+            b1.onclick = function() { 
+                document.querySelectorAll('.srv-node').forEach(n => n.classList.remove('active'));
+                this.classList.add('active'); romeoPlay(fixedMatch.stream); 
+            };
+            wrap.appendChild(b1);
+
+            if (fixedMatch.stream2) {
+                const b2 = document.createElement('button');
+                b2.className = 'srv-node'; b2.innerText = 'سيرفر 2';
+                b2.onclick = function() { 
+                    document.querySelectorAll('.srv-node').forEach(n => n.classList.remove('active'));
+                    this.classList.add('active'); romeoPlay(fixedMatch.stream2); 
                 };
-                btnsWrap.appendChild(s2);
+                wrap.appendChild(b2);
             }
 
-            area.insertBefore(btnsWrap, area.firstChild);
-            romeoEngine(m.stream);
+            container.insertBefore(wrap, container.firstChild);
+            romeoPlay(fixedMatch.stream);
         };
 
-        // جلب البيانات من ملف الـ JSON وتحديث الموقع[span_8](start_span)[span_8](end_span)
-        async function updateMatchesFromJson() {
+        // 4. جلب البيانات من JSON[span_12](start_span)[span_12](end_span)
+        async function loadRomeoJson() {
             try {
-                const res = await fetch('matches.json?cache=' + Date.now());
-                const data = await res.json();
-                db.yesterday = data.yesterday || [];
-                db.today = data.today || [];
-                db.tomorrow = data.tomorrow || [];
+                const r = await fetch('matches.json?v=' + Date.now());
+                const d = await r.json();
+                db.yesterday = d.yesterday || [];
+                db.today = d.today || [];
+                db.tomorrow = d.tomorrow || [];
                 renderMatches('today');
-            } catch (err) { console.error("Error loading JSON"); }
+            } catch (e) { console.error("JSON Error"); }
         }
 
-        window.addEventListener('DOMContentLoaded', updateMatchesFromJson);
+        window.addEventListener('DOMContentLoaded', loadRomeoJson);
     </script>
 </body>
 </html>
