@@ -248,44 +248,109 @@
     </script>
 
     <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-    <!-- 🚀 الإضافات الجديدة (بدون تعديل أي كود قديم) 🚀 -->
+    <!-- 🚀 الإضافات الجديدة - Add Only (بدون تعديل القديم) 🚀 -->
     <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    
+    <!-- مكتبة تشغيل روابط m3u8 (HLS) -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+    <style>
+        /* ستايل إضافي لأزرار السيرفرات */
+        .server-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 10px; padding: 0 15px; }
+        .srv-btn { background: #1a2133; border: 1px solid #333; color: white; padding: 5px 15px; border-radius: 5px; cursor: pointer; font-size: 12px; }
+        .srv-btn.active { background: var(--accent-gold); color: black; border-color: var(--accent-gold); }
+        video { width: 100%; height: 100%; position: absolute; top: 0; left: 0; background: #000; }
+    </style>
+
     <script>
-        /**
-         * وظيفة جديدة لجلب البيانات من ملف JSON خارجي
-         * دون تغيير هيكل الكود الأصلي
-         */
-        async function fetchExternalMatches() {
+        // وظيفة ذكية لتحديد نوع الرابط وتشغيله
+        function smartPlayer(url) {
+            const playerBox = document.getElementById('playerBox');
+            playerBox.innerHTML = ''; // مسح المشغل الحالي
+
+            if (!url) {
+                playerBox.innerHTML = `<div style="padding:50px; text-align:center; color:gray;">البث غير متوفر حالياً</div>`;
+                return;
+            }
+
+            // إذا كان الرابط m3u8 (بث مباشر)
+            if (url.includes('.m3u8')) {
+                const video = document.createElement('video');
+                video.controls = true;
+                video.autoplay = true;
+                playerBox.appendChild(video);
+
+                if (Hls.isSupported()) {
+                    const hls = new Hls();
+                    hls.loadSource(url);
+                    hls.attachMedia(video);
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    video.src = url;
+                }
+            } 
+            // إذا كان رابط Embed (يوتيوب أو غيره)
+            else {
+                playerBox.innerHTML = `<iframe src="${url}" allowfullscreen allow="autoplay; encrypted-media"></iframe>`;
+            }
+        }
+
+        // وظيفة جديدة لتبديل السيرفرات
+        function switchServer(matchId, serverNum, btn) {
+            document.querySelectorAll('.srv-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // البحث عن المباراة في الداتا
+            let matchData = null;
+            for (let day in db) {
+                const found = db[day].find(m => m.id === matchId);
+                if (found) { matchData = found; break; }
+            }
+
+            if (matchData) {
+                const url = serverNum === 1 ? matchData.stream : (matchData.stream2 || matchData.stream);
+                smartPlayer(url);
+            }
+        }
+
+        // تطوير دالة جلب البيانات من JSON لدعم السيرفرات المتعددة والمشغل الذكي
+        async function fetchExternalMatchesExtended() {
             try {
-                // استدعاء ملف JSON (تأكد من وجود الملف في نفس المسار)
                 const response = await fetch('matches.json');
                 const newData = await response.json();
 
-                // مسح البيانات القديمة برمجياً من كائن db دون تغيير الكود المكتوب فوق
                 db.yesterday = newData.yesterday || [];
                 db.today = newData.today || [];
                 db.tomorrow = newData.tomorrow || [];
 
-                // إعادة التشغيل لعرض البيانات الجديدة فوراً
+                // تحديث العرض
                 const activeBtn = document.querySelector('.date-btn.active');
-                if (activeBtn) {
-                    activeBtn.click();
-                } else {
-                    renderMatches('today');
-                }
-                
-                console.log("Match data updated from JSON successfully.");
-            } catch (error) {
-                console.error("Error loading JSON:", error);
-                // في حالة فشل التحميل، الكود الأصلي سيستمر بالعمل بالبيانات الموجودة فيه
-            }
+                if (activeBtn) activeBtn.click();
+            } catch (e) { console.log("JSON Load Info: Using default or local data."); }
         }
 
-        // تشغيل عملية الجلب بمجرد تحميل الصفحة بالكامل
-        // نستخدم addEventListener لضمان عدم تعارضها مع window.onload الأصلي
-        window.addEventListener('DOMContentLoaded', () => {
-            fetchExternalMatches();
-        });
+        // اعتراض دالة openMatch الأصلية برمجياً دون تعديل كودها
+        const originalOpenMatch = openMatch;
+        openMatch = function(match) {
+            originalOpenMatch(match); // تشغيل الوظيفة الأصلية أولاً
+            
+            // إضافة أزرار السيرفرات تحت الفيديو مباشرة
+            const streamSection = document.getElementById('streamSection');
+            const existingTabs = document.querySelector('.server-tabs');
+            if (existingTabs) existingTabs.remove();
+
+            const serverHtml = `
+                <div class="server-tabs">
+                    <button class="srv-btn active" onclick="switchServer(${match.id}, 1, this)">سيرفر 1</button>
+                    <button class="srv-btn" onclick="switchServer(${match.id}, 2, this)">سيرفر 2</button>
+                </div>
+            `;
+            streamSection.insertAdjacentHTML('afterbegin', serverHtml);
+
+            // تشغيل المشغل الذكي بدلاً من الـ iframe الافتراضي
+            smartPlayer(match.stream);
+        };
+
+        window.addEventListener('DOMContentLoaded', fetchExternalMatchesExtended);
     </script>
 
 </body>
