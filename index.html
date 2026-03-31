@@ -133,19 +133,12 @@
 
     <script>
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // 📌 1. نظام البيانات (الداتا ستركشر)
+        // 📌 1. نظام البيانات (تم تصفيره ليعتمد على JSON)
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         const db = {
-            yesterday: [
-                { id: 101, team1: {name:"برشلونة", logo:"https://crests.football-data.org/81.png", lineup:"https://placehold.co/600x400/121826/white?text=Lineup+Barca"}, team2: {name:"خيتافي", logo:"https://crests.football-data.org/82.png", lineup:"https://placehold.co/600x400/121826/white?text=Lineup+Getafe"}, status: "finished", result: "3 - 0", stream: "" }
-            ],
-            today: [
-                { id: 201, team1: {name:"ليفربول", logo:"https://crests.football-data.org/64.png", lineup:"https://placehold.co/600x400/121826/white?text=Lineup+Liverpool"}, team2: {name:"أرسنال", logo:"https://crests.football-data.org/57.png", lineup:"https://placehold.co/600x400/121826/white?text=Lineup+Arsenal"}, status: "live", result: "2 - 1", stream: "https://www.youtube.com/embed/live_example_1" },
-                { id: 202, team1: {name:"ريال مدريد", logo:"https://crests.football-data.org/86.png", lineup:"https://placehold.co/600x400/121826/white?text=Lineup+Real"}, team2: {name:"ميلان", logo:"https://crests.football-data.org/98.png", lineup:"https://placehold.co/600x400/121826/white?text=Lineup+Milan"}, status: "not_started", result: "VS", stream: "https://www.youtube.com/embed/live_example_2" }
-            ],
-            tomorrow: [
-                { id: 301, team1: {name:"مان سيتي", logo:"https://crests.football-data.org/65.png", lineup:""}, team2: {name:"توتنهام", logo:"https://crests.football-data.org/73.png", lineup:""}, status: "not_started", result: "VS", stream: "" }
-            ]
+            yesterday: [],
+            today: [],
+            tomorrow: []
         };
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -248,110 +241,126 @@
     </script>
 
     <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-    <!-- 🚀 الإضافات الجديدة - Add Only (بدون تعديل القديم) 🚀 -->
+    <!-- 🧩 إضافات الربط والإصلاح الشامل (Add Only) 🧩 -->
     <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-    
-    <!-- مكتبة تشغيل روابط m3u8 (HLS) -->
+
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
     <style>
-        /* ستايل إضافي لأزرار السيرفرات */
-        .server-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 10px; padding: 0 15px; }
-        .srv-btn { background: #1a2133; border: 1px solid #333; color: white; padding: 5px 15px; border-radius: 5px; cursor: pointer; font-size: 12px; }
-        .srv-btn.active { background: var(--accent-gold); color: black; border-color: var(--accent-gold); }
-        video { width: 100%; height: 100%; position: absolute; top: 0; left: 0; background: #000; }
+        /* شريط سفلي مربع وشفاف احترافي */
+        .bottom-nav-romeo {
+            position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
+            width: 94%; max-width: 460px; height: 60px;
+            background: rgba(18, 24, 38, 0.8); backdrop-filter: blur(15px);
+            border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex; justify-content: space-around; align-items: center;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); z-index: 9999;
+        }
+        .nav-link { color: #8e94a5; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 4px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .nav-link i { font-size: 19px; }
+        .nav-link span { font-size: 10px; }
+        .nav-link.active { color: var(--accent-gold); }
+
+        /* حاوية السيرفرات */
+        .servers-container { display: flex; gap: 8px; justify-content: center; padding: 12px; flex-wrap: wrap; }
+        .srv-button { background: #1a2133; border: 1px solid #333; color: white; padding: 7px 18px; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; }
+        .srv-button.active { background: var(--accent-gold); color: #000; border-color: var(--accent-gold); }
+        .romeo-video-frame { width: 100%; height: 100%; position: absolute; top:0; left:0; border:0; background: #000; }
     </style>
 
+    <div class="bottom-nav-romeo">
+        <a href="https://romeo311020.github.io/romeo-live-tv-31/" class="nav-link">
+            <i class="fas fa-home"></i><span>الرئيسية</span>
+        </a>
+        <div class="nav-link active" onclick="location.reload()">
+            <i class="fas fa-futbol"></i><span>المباريات</span>
+        </div>
+        <a href="https://wa.me/201027675035" target="_blank" class="nav-link">
+            <i class="fab fa-whatsapp"></i><span>واتساب</span>
+        </a>
+    </div>
+
     <script>
-        // وظيفة ذكية لتحديد نوع الرابط وتشغيله
-        function smartPlayer(url) {
-            const playerBox = document.getElementById('playerBox');
-            playerBox.innerHTML = ''; // مسح المشغل الحالي
-
-            if (!url) {
-                playerBox.innerHTML = `<div style="padding:50px; text-align:center; color:gray;">البث غير متوفر حالياً</div>`;
-                return;
+        // دالة تحويل روابط يوتيوب إلى Embed لضمان التشغيل[span_4](start_span)[span_4](end_span)[span_5](start_span)[span_5](end_span)
+        function getEmbedUrl(url) {
+            if (!url) return "";
+            if (url.includes("youtube.com/watch?v=")) {
+                const id = url.split("v=")[1].split("&")[0];
+                return `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
+            } else if (url.includes("youtu.be/")) {
+                const id = url.split("be/")[1].split("?")[0];
+                return `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
             }
+            return url;
+        }
 
-            // إذا كان الرابط m3u8 (بث مباشر)
-            if (url.includes('.m3u8')) {
-                const video = document.createElement('video');
-                video.controls = true;
-                video.autoplay = true;
-                playerBox.appendChild(video);
+        // محرك تشغيل الفيديو المتقدم[span_6](start_span)[span_6](end_span)
+        function romeoEngine(link) {
+            const box = document.getElementById('playerBox');
+            box.innerHTML = "";
+            const finalLink = getEmbedUrl(link);
 
+            if (finalLink.includes(".m3u8")) {
+                const v = document.createElement('video');
+                v.className = "romeo-video-frame"; v.controls = true; v.autoplay = true;
+                box.appendChild(v);
                 if (Hls.isSupported()) {
-                    const hls = new Hls();
-                    hls.loadSource(url);
-                    hls.attachMedia(video);
-                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                    video.src = url;
-                }
-            } 
-            // إذا كان رابط Embed (يوتيوب أو غيره)
-            else {
-                playerBox.innerHTML = `<iframe src="${url}" allowfullscreen allow="autoplay; encrypted-media"></iframe>`;
+                    const h = new Hls(); h.loadSource(finalLink); h.attachMedia(v);
+                } else { v.src = finalLink; }
+            } else {
+                box.innerHTML = `<iframe class="romeo-video-frame" src="${finalLink}" allowfullscreen allow="autoplay"></iframe>`;
             }
         }
 
-        // وظيفة جديدة لتبديل السيرفرات
-        function switchServer(matchId, serverNum, btn) {
-            document.querySelectorAll('.srv-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            // البحث عن المباراة في الداتا
-            let matchData = null;
-            for (let day in db) {
-                const found = db[day].find(m => m.id === matchId);
-                if (found) { matchData = found; break; }
-            }
-
-            if (matchData) {
-                const url = serverNum === 1 ? matchData.stream : (matchData.stream2 || matchData.stream);
-                smartPlayer(url);
-            }
-        }
-
-        // تطوير دالة جلب البيانات من JSON لدعم السيرفرات المتعددة والمشغل الذكي
-        async function fetchExternalMatchesExtended() {
-            try {
-                const response = await fetch('matches.json');
-                const newData = await response.json();
-
-                db.yesterday = newData.yesterday || [];
-                db.today = newData.today || [];
-                db.tomorrow = newData.tomorrow || [];
-
-                // تحديث العرض
-                const activeBtn = document.querySelector('.date-btn.active');
-                if (activeBtn) activeBtn.click();
-            } catch (e) { console.log("JSON Load Info: Using default or local data."); }
-        }
-
-        // اعتراض دالة openMatch الأصلية برمجياً دون تعديل كودها
-        const originalOpenMatch = openMatch;
-        openMatch = function(match) {
-            originalOpenMatch(match); // تشغيل الوظيفة الأصلية أولاً
+        // اعتراض دالة الفتح لإضافة السيرفرات ومعالجة الروابط[span_7](start_span)[span_7](end_span)
+        const nativeOpen = openMatch;
+        openMatch = function(m) {
+            nativeOpen(m);
             
-            // إضافة أزرار السيرفرات تحت الفيديو مباشرة
-            const streamSection = document.getElementById('streamSection');
-            const existingTabs = document.querySelector('.server-tabs');
-            if (existingTabs) existingTabs.remove();
+            const area = document.getElementById('streamSection');
+            const oldButtons = document.querySelector('.servers-container');
+            if (oldButtons) oldButtons.remove();
 
-            const serverHtml = `
-                <div class="server-tabs">
-                    <button class="srv-btn active" onclick="switchServer(${match.id}, 1, this)">سيرفر 1</button>
-                    <button class="srv-btn" onclick="switchServer(${match.id}, 2, this)">سيرفر 2</button>
-                </div>
-            `;
-            streamSection.insertAdjacentHTML('afterbegin', serverHtml);
+            const btnsWrap = document.createElement('div');
+            btnsWrap.className = 'servers-container';
+            
+            // سيرفر 1
+            const s1 = document.createElement('button');
+            s1.className = 'srv-button active'; s1.innerText = 'سيرفر 1';
+            s1.onclick = function() { 
+                document.querySelectorAll('.srv-button').forEach(x => x.classList.remove('active'));
+                this.classList.add('active'); romeoEngine(m.stream); 
+            };
+            btnsWrap.appendChild(s1);
 
-            // تشغيل المشغل الذكي بدلاً من الـ iframe الافتراضي
-            smartPlayer(match.stream);
+            // سيرفر 2
+            if (m.stream2) {
+                const s2 = document.createElement('button');
+                s2.className = 'srv-button'; s2.innerText = 'سيرفر 2';
+                s2.onclick = function() { 
+                    document.querySelectorAll('.srv-button').forEach(x => x.classList.remove('active'));
+                    this.classList.add('active'); romeoEngine(m.stream2); 
+                };
+                btnsWrap.appendChild(s2);
+            }
+
+            area.insertBefore(btnsWrap, area.firstChild);
+            romeoEngine(m.stream);
         };
 
-        window.addEventListener('DOMContentLoaded', fetchExternalMatchesExtended);
-    </script>
+        // جلب البيانات من ملف الـ JSON وتحديث الموقع[span_8](start_span)[span_8](end_span)
+        async function updateMatchesFromJson() {
+            try {
+                const res = await fetch('matches.json?cache=' + Date.now());
+                const data = await res.json();
+                db.yesterday = data.yesterday || [];
+                db.today = data.today || [];
+                db.tomorrow = data.tomorrow || [];
+                renderMatches('today');
+            } catch (err) { console.error("Error loading JSON"); }
+        }
 
+        window.addEventListener('DOMContentLoaded', updateMatchesFromJson);
+    </script>
 </body>
 </html>
