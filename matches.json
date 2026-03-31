@@ -6,16 +6,16 @@
       "team1": {
         "name": "مصر",
         "logo": "https://i.postimg.cc/mgqVvCw0/tnzyl.png",
-        "lineup": ""
+        "lineup": "https://i.postimg.cc/6Qg1zsmj/IMG-20260331-210355.jpg"
       },
       "team2": {
         "name": "اسبانيا",
         "logo": "https://i.postimg.cc/7PV9xp9K/images.png",
-        "lineup": ""
+        "lineup": "https://i.postimg.cc/6qLj98pN/IMG-20260331-210411.jpg"
       },
-      "status": "not_started",
-      "link": "https://www.youtube.com/embed/Zkr9745mW0I",
-      "link2": "https://www.youtube.com/embed/Zkr9745mW0I",
+      "status": "live",
+      "link": "https://p3.panda-live.online/albaplayer/on-time/",
+      "link2": "",
       "download_url": ""
     }
   ],
