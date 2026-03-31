@@ -1,0 +1,72 @@
+{
+  "yesterday": [
+    {
+      "id": 101,
+      "team1": {
+        "name": "بايرن ميونخ",
+        "logo": "https://crests.football-data.org/5.png",
+        "lineup": "https://placehold.co/600x400/121826/white?text=Bayern+Lineup"
+      },
+      "team2": {
+        "name": "باريس سان جيرمان",
+        "logo": "https://crests.football-data.org/524.png",
+        "lineup": "https://placehold.co/600x400/121826/white?text=PSG+Lineup"
+      },
+      "status": "finished",
+      "result": "2 - 1",
+      "stream": ""
+    }
+  ],
+  "today": [
+    {
+      "id": 201,
+      "team1": {
+        "name": "ريال مدريد",
+        "logo": "https://crests.football-data.org/86.png",
+        "lineup": "https://pbs.twimg.com/media/GH0_Qj6W4AA6D_V.jpg"
+      },
+      "team2": {
+        "name": "برشلونة",
+        "logo": "https://crests.football-data.org/81.png",
+        "lineup": "https://pbs.twimg.com/media/F9XJ7xZWAAA6Y6Y.jpg"
+      },
+      "status": "live",
+      "result": "1 - 0",
+      "stream": "https://www.youtube.com/embed/dQw4w9WgXcQ"
+    },
+    {
+      "id": 202,
+      "team1": {
+        "name": "مانشستر سيتي",
+        "logo": "https://crests.football-data.org/65.png",
+        "lineup": "https://placehold.co/600x400/121826/white?text=City+Lineup"
+      },
+      "team2": {
+        "name": "ليفربول",
+        "logo": "https://crests.football-data.org/64.png",
+        "lineup": "https://placehold.co/600x400/121826/white?text=Liverpool+Lineup"
+      },
+      "status": "not_started",
+      "result": "VS",
+      "stream": "https://www.youtube.com/embed/dQw4w9WgXcQ"
+    }
+  ],
+  "tomorrow": [
+    {
+      "id": 301,
+      "team1": {
+        "name": "ميلان",
+        "logo": "https://crests.football-data.org/98.png",
+        "lineup": ""
+      },
+      "team2": {
+        "name": "إنتر ميلان",
+        "logo": "https://crests.football-data.org/108.png",
+        "lineup": ""
+      },
+      "status": "not_started",
+      "result": "VS",
+      "stream": ""
+    }
+  ]
+}
