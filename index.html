@@ -602,106 +602,110 @@
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
-    <style id="new-shining-title-styles">
-        /* تصميم الجملة اللامعة والمنيرة */
-        .shining-title {
-            text-align: center;
-            font-size: 28px;
-            font-weight: 900;
-            margin: 30px 10px 20px;
-            color: #fff;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            /* تأثير الإضاءة واللمعان */
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 
-                         0 0 20px var(--accent-red), 
-                         0 0 30px var(--accent-red);
-            animation: text-glow 2s ease-in-out infinite alternate;
-        }
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <!-- 🚀 إضافة التعديلات الجديدة (Add Only) 🚀 -->
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
 
-        @keyframes text-glow {
-            from {
-                text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px var(--accent-red), 0 0 30px var(--accent-red);
-                transform: scale(1);
-            }
-            to {
-                text-shadow: 0 0 20px rgba(255, 255, 255, 1), 0 0 30px var(--accent-gold), 0 0 40px var(--accent-gold);
-                transform: scale(1.05);
-            }
-        }
-
-        /* إخفاء العناصر القديمة التي لم تعد مطلوبة */
+    <style id="new-simple-styles">
+        /* 1. حذف أزرار التواريخ نهائياً عبر التصميم */
         .date-nav, #liveNowSection { display: none !important; }
+
+        /* 2. تكبير التصميم بنسبة 8% تقريباً (Scale) */
+        :root {
+            --global-scale: 1.08;
+        }
+        
+        body { 
+            font-size: calc(14px * var(--global-scale)); 
+        }
+
+        /* 2. تنسيق العنوان الرئيسي الجديد */
+        .custom-main-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 900;
+            color: #fff;
+            margin: 30px 0 20px 0;
+            display: block;
+            text-shadow: 0 0 10px rgba(255,255,255,0.1);
+        }
+
+        /* تكبير الكروت والمسافات بما يناسب الـ Scale الجديد */
+        .match-card {
+            padding: calc(12px * var(--global-scale)) !important;
+            margin-bottom: 10px !important;
+        }
+
+        .matches-list {
+            gap: 12px !important;
+            padding-top: 10px;
+        }
+
+        .team-col img { 
+            width: calc(35px * var(--global-scale)) !important; 
+            height: calc(35px * var(--global-scale)) !important; 
+        }
+
+        .team-name-small { font-size: calc(11px * var(--global-scale)) !important; }
+        .vs-small { font-size: calc(14px * var(--global-scale)) !important; }
+
+        /* تحسين إضافي للهيدر (تكبير الاسم) */
+        .logo-main {
+            font-size: calc(20px * var(--global-scale) * 1.2) !important;
+            transition: transform 0.3s ease;
+        }
+        .logo-main:hover { transform: scale(1.05); }
     </style>
 
-    <script id="new-combined-logic">
-        // وظيفة دمج كافة المباريات وعرض العنوان الجديد
-        function renderCombinedMatchesWithTitle() {
+    <script id="new-logic-add-only">
+        // وظيفة دمج كافة المباريات في قائمة واحدة
+        function renderAllMatchesSimple() {
             const container = document.getElementById('matchesContainer');
             if(!container) return;
 
-            // التأكد من تحميل البيانات
+            // ننتظر حتى تكتمل البيانات في db أولاً
             if (!db.today.length && !db.yesterday.length && !db.tomorrow.length) {
-                setTimeout(renderCombinedMatchesWithTitle, 500);
+                setTimeout(renderAllMatchesSimple, 500);
                 return;
             }
 
-            // 1. إضافة الجملة اللامعة قبل الحاوية إذا لم تكن موجودة
-            if(!document.getElementById('mainShiningTitle')) {
-                const titleDiv = document.createElement('div');
-                titleDiv.id = 'mainShiningTitle';
-                titleDiv.className = 'shining-title';
-                titleDiv.innerText = 'شاهد المباريات بث مباشر';
-                container.parentNode.insertBefore(titleDiv, container);
+            container.innerHTML = '';
+            
+            // إضافة العنوان الرئيسي الجديد أعلى القائمة
+            if(!document.getElementById('addedTitle')) {
+                const title = document.createElement('h2');
+                title.id = 'addedTitle';
+                title.className = 'custom-main-title';
+                title.innerText = 'شاهد المباريات بث مباشر';
+                container.parentNode.insertBefore(title, container);
             }
 
-            // 2. تنظيف الحاوية ودمج كافة المباريات
-            container.innerHTML = '';
+            // دمج كل المصفوفات (yesterday, today, tomorrow) في قائمة واحدة
             const allMatches = [...db.yesterday, ...db.today, ...db.tomorrow];
 
             if (allMatches.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding:20px; color:gray;">لا توجد مباريات حالياً</div>';
+                container.innerHTML = '<div style="text-align:center; padding:20px; color:gray;">لا توجد مباريات متاحة حالياً</div>';
                 return;
             }
 
+            // عرض المباريات المدمجة بالكامل
             allMatches.forEach(m => {
                 const card = createMatchCard(m);
                 container.appendChild(card);
             });
-
-            // 3. تحديث نصوص الحالة (وقت، مباشر، انتهت) بدلاً من VS
-            const cards = container.querySelectorAll('.match-card');
-            cards.forEach(card => {
-                const midSection = card.querySelector('.match-mid');
-                const vsText = midSection.querySelector('.vs-small');
-                const statusTag = midSection.querySelector('.status-tag');
-                const countdown = midSection.querySelector('.countdown');
-
-                if (statusTag.innerText.includes('لم تبدأ')) {
-                    if (countdown) {
-                        vsText.innerText = countdown.getAttribute('data-time');
-                        vsText.style.fontSize = '12px';
-                    }
-                } else if (statusTag.innerText.includes('مباشر')) {
-                    vsText.innerText = 'مباشر';
-                    vsText.style.color = '#ff3e3e';
-                } else if (statusTag.innerText.includes('انتهت')) {
-                    vsText.innerText = 'انتهت';
-                    vsText.style.color = 'gray';
-                }
-            });
         }
 
-        // ربط الوظيفة الجديدة بدورة حياة التطبيق (Add-Only)
-        const originalHook = loadData;
+        // ربط الوظيفة الجديدة بنهاية عملية تحميل البيانات الأصلية دون تغييرها
+        const originalLoadData = loadData;
         loadData = async function() {
-            await originalHook();
-            renderCombinedMatchesWithTitle();
+            await originalLoadData();
+            renderAllMatchesSimple();
         };
 
-        // تشغيل دوري للتحديث المستمر
-        setInterval(renderCombinedMatchesWithTitle, 3000);
+        // التأكد من التشغيل عند تحميل الصفحة
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(renderAllMatchesSimple, 1000);
+        });
     </script>
-
 </body>
 </html>
