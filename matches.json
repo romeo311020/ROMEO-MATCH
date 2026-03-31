@@ -1,22 +1,5 @@
 {
   "yesterday": [],
   "today": [],
-  "tomorrow": [
-    {
-      "id": 301,
-      "team1": {
-        "name": "ÙÙÙØ§Ù",
-        "logo": "https://crests.football-data.org/98.png",
-        "lineup": ""
-      },
-      "team2": {
-        "name": "Ø¥ÙØªØ± ÙÙÙØ§Ù",
-        "logo": "https://crests.football-data.org/108.png",
-        "lineup": ""
-      },
-      "status": "not_started",
-      "result": "VS",
-      "stream": ""
-    }
-  ]
+  "tomorrow": []
 }
