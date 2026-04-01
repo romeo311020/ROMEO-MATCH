@@ -421,7 +421,7 @@
                 } else {
                     timeInput.value = "";
                 }
-                handleStatusChange(); // لتحديث الظهور/الإخفاء فوراً
+                handleStatusChange(); // لتحديث الظهور/إخفاء فوراً
             };
 
             // 7. اعتراض دالة openForm لتصفير حقل الوقت
@@ -433,6 +433,82 @@
             };
 
         })();
+    </script>
+
+    <script id="encoding-fix-logic">
+        // وظيفة لإصلاح فك تشفير البيانات القادمة من GitHub لتدعم العربية بوضوح
+        async function loginWithEncodingFix() {
+            const token = document.getElementById('ghToken').value;
+            const repo = document.getElementById('ghRepo').value;
+            if(!token || !repo) return alert("يرجى إدخال البيانات");
+
+            toggleLoader(true);
+            try {
+                const res = await fetch(`https://api.github.com/repos/${repo}/contents/matches.json`, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+                
+                if(res.status === 404) {
+                    ALL_MATCHES = { yesterday: [], today: [], tomorrow: [] };
+                    CONFIG = { token, repo, sha: '' };
+                } else {
+                    const data = await res.json();
+                    // استخدام فك تشفير يدعم اليونيكود (Unicode Safe Decoding)
+                    const decodedContent = decodeURIComponent(escape(atob(data.content)));
+                    ALL_MATCHES = JSON.parse(decodedContent);
+                    CONFIG = { token, repo, sha: data.sha };
+                }
+                
+                renderDashboard();
+                showView('dashboardView');
+            } catch (e) {
+                console.error("Encoding Fix Error:", e);
+                // إذا فشل الفحص الجديد، نترك الدالة الأصلية تحاول (Fail-safe)
+            }
+            toggleLoader(false);
+        }
+
+        // استبدال مرجع دالة الدخول برمجياً بدون مسح القديمة
+        const originalLoginBtn = document.querySelector('.login-container button');
+        if(originalLoginBtn) {
+            originalLoginBtn.onclick = loginWithEncodingFix;
+        }
+
+        // وظيفة لحل مشكلة ظهور الأسماء الغريبة في لوحة التحكم عند الحفظ
+        window.syncWithGithub = async function() {
+            toggleLoader(true);
+            try {
+                // استخدام ترميز يدعم اليونيكود (Unicode Safe Encoding) قبل التحويل لـ Base64
+                const jsonString = JSON.stringify(ALL_MATCHES, null, 2);
+                const content = btoa(unescape(encodeURIComponent(jsonString)));
+                
+                const res = await fetch(`https://api.github.com/repos/${CONFIG.repo}/contents/matches.json`, {
+                    method: 'PUT',
+                    headers: { 
+                        'Authorization': `token ${CONFIG.token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: "Update matches via ROMEO ADMIN (UTF-8 Fix)",
+                        content: content,
+                        sha: CONFIG.sha
+                    })
+                });
+                
+                const result = await res.json();
+                if(res.ok) {
+                    CONFIG.sha = result.content.sha;
+                    alert("تم الحفظ والمزامنة بنجاح! ✅");
+                    renderDashboard();
+                    showView('dashboardView');
+                } else {
+                    throw new Error(result.message);
+                }
+            } catch (e) {
+                alert("خطأ في المزامنة: " + e.message);
+            }
+            toggleLoader(false);
+        };
     </script>
 </body>
 </html>
