@@ -68,6 +68,23 @@
       "link": "",
       "link2": "",
       "download_url": ""
+    },
+    {
+      "id": 1775011087623,
+      "team1": {
+        "name": "مصر",
+        "logo": "https://i.postimg.cc/mgqVvCw0/tnzyl.png",
+        "lineup": ""
+      },
+      "team2": {
+        "name": "اسبانيا",
+        "logo": "https://i.postimg.cc/7PV9xp9K/images.png",
+        "lineup": ""
+      },
+      "status": "finished",
+      "link": "",
+      "link2": "",
+      "download_url": ""
     }
   ],
   "tomorrow": []
