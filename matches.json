@@ -2,23 +2,6 @@
   "yesterday": [],
   "today": [
     {
-      "id": 1774993244121,
-      "team1": {
-        "name": "بلجيكا",
-        "logo": "https://i.postimg.cc/qvxPccWr/2373.png",
-        "lineup": ""
-      },
-      "team2": {
-        "name": "المكسيك",
-        "logo": "https://i.postimg.cc/Xv2tmjVD/5106.png",
-        "lineup": ""
-      },
-      "status": "finished",
-      "link": "",
-      "link2": "",
-      "download_url": ""
-    },
-    {
       "id": 1775011087623,
       "team1": {
         "name": "مصر",
