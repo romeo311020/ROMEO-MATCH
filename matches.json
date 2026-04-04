@@ -17,23 +17,6 @@
       "link": "https://p5.panda-live.online/albaplayer/bein-1/",
       "link2": "<iframe src=\"https://1.simosports.live/splayer/Live5.php\" width=\"100%\" height=\"500px\" frameborder=\"0\" allowfullscreen></iframe>",
       "download_url": ""
-    },
-    {
-      "id": 1775317899709,
-      "team1": {
-        "name": "ليفربول",
-        "logo": "https://i.postimg.cc/Kzs5pzXg/108.png",
-        "lineup": ""
-      },
-      "team2": {
-        "name": "مانشستر ستي",
-        "logo": "https://i.postimg.cc/sgRb4n9L/110.png",
-        "lineup": ""
-      },
-      "status": "finished",
-      "link": "https://p4.panda-live.online/albaplayer/bein-1/",
-      "link2": "",
-      "download_url": ""
     }
   ],
   "tomorrow": []
