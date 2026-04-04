@@ -602,10 +602,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
-    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-    <!-- 🚀 إضافة التعديلات الجديدة (Add Only) 🚀 -->
-    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-
     <style id="new-simple-styles">
         /* 1. حذف أزرار التواريخ نهائياً عبر التصميم */
         .date-nav, #liveNowSection { display: none !important; }
@@ -705,6 +701,177 @@
         // التأكد من التشغيل عند تحميل الصفحة
         window.addEventListener('DOMContentLoaded', () => {
             setTimeout(renderAllMatchesSimple, 1000);
+        });
+    </script>
+
+
+    <style id="premium-player-styles">
+        /* تكبير المشغل ليكون أضخم واحترافي */
+        .video-container {
+            max-width: 1000px !important; /* زيادة الحجم */
+            padding: 0 10px !important;
+        }
+
+        .player-box {
+            border: 2px solid var(--accent-gold) !important;
+            box-shadow: 0 0 30px rgba(229, 184, 11, 0.2), 0 10px 40px rgba(0,0,0,0.8) !important;
+            background: #000 !important;
+            position: relative;
+        }
+
+        /* واجهة اسم الموقع داخل المشغل */
+        .player-watermark {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(0,0,0,0.5);
+            padding: 5px 12px;
+            border-radius: 8px;
+            border-right: 3px solid var(--accent-gold);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(5px);
+        }
+
+        .player-watermark span {
+            font-weight: 900;
+            font-size: 14px;
+            color: #fff;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px var(--accent-gold);
+        }
+
+        /* شاشة التحميل الجديدة (Spinner On The Side) */
+        #premiumLoader {
+            background: rgba(4, 7, 20, 0.98) !important;
+        }
+
+        .loader-layout {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+            padding: 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .side-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255,255,255,0.05);
+            border-top: 4px solid var(--accent-red);
+            border-right: 4px solid var(--accent-gold);
+            border-radius: 50%;
+            animation: premiumSpin 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+        }
+
+        @keyframes premiumSpin {
+            100% { transform: rotate(360deg); }
+        }
+
+        .loader-text-group {
+            text-align: right;
+        }
+
+        .loader-title {
+            font-weight: 900;
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .loader-bar-bg {
+            width: 180px;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loader-bar-fill {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 100%;
+            background: linear-gradient(to left, var(--accent-red), var(--accent-gold));
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        /* تحسين أزرار وضع السينما والسيرفرات */
+        .cinema-btn {
+            margin-top: 20px !important;
+            padding: 12px 25px !important;
+            font-size: 14px !important;
+            font-weight: bold !important;
+        }
+    </style>
+
+    <script id="premium-player-logic">
+        // وظيفة تحديث شاشة التحميل (Loader)
+        function updatePremiumLoaderUI() {
+            const loader = document.getElementById('premiumLoader');
+            if(!loader) return;
+
+            // استبدال المحتوى القديم بالتصميم الجديد
+            loader.innerHTML = `
+                <div class="loader-layout">
+                    <div class="loader-text-group">
+                        <div class="loader-title">ROMEO LIVE HD</div>
+                        <div class="loader-bar-bg">
+                            <div class="loader-bar-fill" id="newProgressFill"></div>
+                        </div>
+                        <p style="margin-top: 10px; font-size: 12px; color: var(--text-gray);">جاري الاتصال بالسيرفر المشفر...</p>
+                    </div>
+                    <div class="side-spinner"></div>
+                </div>
+            `;
+        }
+
+        // إضافة العلامة المائية للمشغل
+        function addPlayerWatermark() {
+            const playerBox = document.getElementById('playerBox');
+            if(!playerBox || document.getElementById('romeoWatermark')) return;
+
+            const watermark = document.createElement('div');
+            watermark.id = 'romeoWatermark';
+            watermark.className = 'player-watermark';
+            watermark.innerHTML = `
+                <i class="fas fa-compact-disc fa-spin" style="color: var(--accent-gold);"></i>
+                <span>ROMEO LIVE HD</span>
+            `;
+            playerBox.appendChild(watermark);
+        }
+
+        // دالة تشغيل التحميل الجديد
+        const originalOpenMatch = openMatch;
+        openMatch = function(match) {
+            updatePremiumLoaderUI();
+            const pLoader = document.getElementById('premiumLoader');
+            const pFill = document.getElementById('newProgressFill');
+            
+            pLoader.style.display = 'flex';
+            setTimeout(() => { if(pFill) pFill.style.width = '85%'; }, 100);
+
+            setTimeout(() => {
+                if(pFill) pFill.style.width = '100%';
+                setTimeout(() => {
+                    pLoader.style.display = 'none';
+                    executeOpenMatch(match);
+                    addPlayerWatermark(); // إضافة العلامة المائية عند فتح المشغل
+                }, 500);
+            }, 1500);
+        };
+
+        // تشغيل التعديلات عند التحميل
+        window.addEventListener('load', () => {
+            updatePremiumLoaderUI();
         });
     </script>
 </body>
