@@ -2,23 +2,6 @@
   "yesterday": [],
   "today": [
     {
-      "id": 1775317758136,
-      "team1": {
-        "name": "ريال مدريد",
-        "logo": "https://i.postimg.cc/wBM72730/131.png",
-        "lineup": ""
-      },
-      "team2": {
-        "name": "ريال مايوركا",
-        "logo": "https://i.postimg.cc/cCRHC35L/142.png",
-        "lineup": ""
-      },
-      "status": "finished",
-      "link": "https://p4.panda-live.online/albaplayer/bein-2/",
-      "link2": "",
-      "download_url": ""
-    },
-    {
       "id": 1775317836822,
       "team1": {
         "name": "برشلونة ",
