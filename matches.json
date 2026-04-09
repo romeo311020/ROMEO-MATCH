@@ -1,23 +1,5 @@
 {
   "yesterday": [],
-  "today": [
-    {
-      "id": 1775317836822,
-      "team1": {
-        "name": "برشلونة ",
-        "logo": "https://i.postimg.cc/ZK8rp0M4/132.png",
-        "lineup": ""
-      },
-      "team2": {
-        "name": "اتليتكو مدريد",
-        "logo": "https://i.postimg.cc/3Rg7FTjs/134.png",
-        "lineup": ""
-      },
-      "status": "finished",
-      "link": "https://p5.panda-live.online/albaplayer/bein-1/",
-      "link2": "https://1.simosports.live/splayer/Live5.php",
-      "download_url": ""
-    }
-  ],
+  "today": [],
   "tomorrow": []
 }
