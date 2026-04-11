@@ -210,6 +210,65 @@
             gap: 10px;
         }
     </style>
+
+    <style id="new-professional-add-only">
+        /* تحسين زر التكبير */
+        .cinema-btn {
+            background: linear-gradient(135deg, #e5b80b, #9b7a02) !important;
+            color: #000 !important;
+            border: none !important;
+            padding: 12px 30px !important;
+            border-radius: 50px !important;
+            font-weight: 900 !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(229, 184, 11, 0.4) !important;
+            transition: all 0.3s ease !important;
+            margin-top: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .cinema-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 25px rgba(229, 184, 11, 0.6) !important;
+        }
+        .cinema-btn i { font-size: 18px; }
+
+        /* عنوان المباراة الحصري */
+        .exclusive-title {
+            background: rgba(212, 175, 55, 0.05);
+            border-right: 4px solid var(--premium-gold);
+            padding: 12px 20px;
+            margin-bottom: 15px;
+            font-weight: 700;
+            font-size: 15px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-radius: 0 8px 8px 0;
+        }
+        .exclusive-title span { color: var(--premium-gold); }
+
+        /* قسم شاهد المباريات تحت البث */
+        .watch-all-section {
+            margin-top: 40px;
+            padding: 20px 15px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .watch-all-title {
+            color: var(--premium-gold);
+            font-weight: 900;
+            font-size: 18px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+    </style>
 </head>
 <body>
 
@@ -256,6 +315,8 @@
     </div>
 
     <div id="matchPage" class="page">
+        <div id="exclusiveMatchContainer" style="padding: 10px 15px 0;"></div>
+
         <div class="match-details-header" id="detailsHeader"></div>
 
         <div class="action-tabs">
@@ -273,6 +334,14 @@
                 <button class="cinema-btn" onclick="enableCinemaMode()"><i class="fas fa-expand"></i> وضع السينما (تكبير)</button>
             </div>
             <div id="serverNav" class="server-nav"></div>
+
+            <div class="watch-all-section">
+                <div class="watch-all-title">
+                    <i class="fas fa-tv"></i> شاهد المباريات بث مباشر
+                </div>
+                <div id="playerMatchesList" class="matches-list">
+                    </div>
+            </div>
         </div>
 
         <div id="lineupSection" class="lineup-container">
@@ -632,6 +701,55 @@
         }
     </script>
 
+    <script id="new-ui-logic-add-only">
+        // دالة لإضافة النص الحصري وتحديث قائمة المباريات تحت البث
+        function updatePlayerPageElements(match) {
+            const exclusiveContainer = document.getElementById('exclusiveMatchContainer');
+            const playerMatchesList = document.getElementById('playerMatchesList');
+
+            if(exclusiveContainer) {
+                exclusiveContainer.innerHTML = `
+                    <div class="exclusive-title">
+                        <i class="fas fa-star" style="color: var(--premium-gold);"></i>
+                        حصرياً مباراة <span>${match.team1.name} ضد ${match.team2.name}</span> علي ROMEO LIVE TV
+                    </div>
+                `;
+            }
+
+            // تحديث قائمة المباريات في صفحة المشغل
+            if(playerMatchesList) {
+                playerMatchesList.innerHTML = '';
+                const allMatches = [
+                    ...(db.yesterday || []), 
+                    ...(db.today || []), 
+                    ...(db.tomorrow || [])
+                ];
+                allMatches.forEach(m => {
+                    playerMatchesList.appendChild(createMatchCard(m));
+                });
+            }
+        }
+
+        // ربط التحديث بالدالة الأصلية لفتح المباراة
+        const originalExecuteOpenMatch = executeOpenMatch;
+        executeOpenMatch = function(match) {
+            originalExecuteOpenMatch(match);
+            updatePlayerPageElements(match);
+        };
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+    <style id="hide-elements-fix">
+        /* إخفاء جملة جاري تجهيز البث المباشر */
+        #premiumLoader p {
+            display: none !important;
+        }
+        /* إخفاء المربع الأبيض (شريط التحميل) */
+        .progress-bar-container {
+            display: none !important;
+        }
+    </style>
+
 </body>
 </html>
