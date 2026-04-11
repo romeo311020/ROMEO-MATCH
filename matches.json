@@ -1,23 +1,5 @@
 {
   "yesterday": [],
-  "today": [
-    {
-      "id": 1775778814661,
-      "team1": {
-        "name": "الزمالك",
-        "logo": "https://i.postimg.cc/SscdGJGg/8201.png",
-        "lineup": ""
-      },
-      "team2": {
-        "name": "شباب بلوزداد",
-        "logo": "https://i.postimg.cc/ZKbHrYyT/8225.png",
-        "lineup": ""
-      },
-      "status": "not_started",
-      "link": "",
-      "link2": "",
-      "download_url": ""
-    }
-  ],
+  "today": [],
   "tomorrow": []
 }
