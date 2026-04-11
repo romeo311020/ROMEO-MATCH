@@ -696,5 +696,168 @@
 
         window.addEventListener('DOMContentLoaded', setupLinks);
     </script>
+
+<style>
+    /* منع الزوم (التكبير والتصغير) وجعل الموقع كامل الشاشة */
+    html, body {
+        touch-action: manipulation;
+        user-select: none;
+        -webkit-user-select: none;
+        overflow-x: hidden;
+        width: 100%;
+        height: 100%;
+        position: fixed; /* يمنع السحب العشوائي في بعض المتصفحات */
+    }
+
+    /* تصميم المشغل الاحترافي (شبه المواقع العالمية) */
+    #matchPage {
+        background: radial-gradient(circle at top, #1a1a1a 0%, #050505 100%);
+        min-height: 100vh;
+        padding-top: 10px;
+    }
+
+    .match-header {
+        background: transparent !important;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .premium-info-bar {
+        background: rgba(212, 175, 55, 0.1);
+        width: 100%;
+        padding: 8px;
+        text-align: center;
+        font-size: 11px;
+        color: var(--lux-gold);
+        border-radius: 8px;
+        margin-top: 15px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    /* العداد التنازلي الاحترافي */
+    .countdown-container {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 10px;
+    }
+    .countdown-box {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        border-radius: 6px;
+        padding: 5px;
+        min-width: 45px;
+        text-align: center;
+    }
+    .countdown-val {
+        display: block;
+        font-weight: 900;
+        font-size: 16px;
+        color: #fff;
+    }
+    .countdown-label {
+        font-size: 8px;
+        color: var(--lux-gold);
+        text-transform: uppercase;
+    }
+
+    /* إخفاء شريط العنوان في الهيدر عند دخول صفحة المباراة لزيادة الاحترافية */
+    .page.active#matchPage ~ header { display: none; }
+</style>
+
+<script>
+    // وظيفة منع الزوم عن طريق اللمس المتعدد
+    document.addEventListener('touchstart', function (event) {
+        if (event.touches.length > 1) {
+            event.preventDefault();
+        }
+    }, { passive: false });
+
+    // تعديل عرض الوقت والعداد التنازلي
+    const originalRenderMatchesNew = renderMatches;
+    renderMatches = function(day) {
+        originalRenderMatchesNew(day);
+        
+        const allCards = document.querySelectorAll('.match-card');
+        allCards.forEach((card, index) => {
+            const match = (matchesData[day] || [])[index];
+            if (match && match.status !== 'live' && match.status !== 'finished') {
+                const timeEl = card.querySelector('.match-time');
+                if (timeEl) timeEl.innerText = match.time; // عرض وقت المباراة بدلاً من VS
+            }
+        });
+    };
+
+    // وظيفة العداد التنازلي
+    function startCountdown(matchTimeStr, containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        function update() {
+            const now = new Date();
+            // تحويل وقت المباراة (مثلاً 21:00) لتوقيت القاهرة اليوم
+            const [hours, minutes] = matchTimeStr.split(':');
+            const matchDate = new Date();
+            matchDate.setHours(parseInt(hours), parseInt(minutes), 0);
+
+            const diff = matchDate - now;
+
+            if (diff <= 0) {
+                container.innerHTML = '<span style="color:var(--accent-red); font-weight:bold; animation:pulse 1s infinite">المباراة بدأت الآن</span>';
+                return;
+            }
+
+            const h = Math.floor(diff / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+            container.innerHTML = `
+                <div class="countdown-box"><span class="countdown-val">${h}</span><span class="countdown-label">ساعة</span></div>
+                <div class="countdown-box"><span class="countdown-val">${m}</span><span class="countdown-label">دقيقة</span></div>
+                <div class="countdown-box"><span class="countdown-val">${s}</span><span class="countdown-label">ثانية</span></div>
+            `;
+        }
+        
+        const timer = setInterval(update, 1000);
+        update();
+        return timer;
+    }
+
+    // تعديل فتح المباراة لإضافة العداد وشريط المعلومات
+    const lastOpenMatch = openMatch;
+    let currentTimer;
+
+    openMatch = function(match) {
+        if (currentTimer) clearInterval(currentTimer);
+        lastOpenMatch(match);
+
+        const header = document.getElementById('matchHeader');
+        
+        // إضافة شريط معلومات احترافي أسفل الهيدر
+        const infoBar = document.createElement('div');
+        infoBar.className = "premium-info-bar";
+        infoBar.innerHTML = `
+            <span><i class="fas fa-microphone"></i> ${match.commentary || 'غير معروف'}</span>
+            <span><i class="fas fa-broadcast-tower"></i> ${match.channel || 'بي إن سبورت'}</span>
+        `;
+        header.appendChild(infoBar);
+
+        // إذا لم تبدأ المباراة، أضف العداد
+        if (match.status !== 'live' && match.status !== 'finished') {
+            const countdownDiv = document.createElement('div');
+            countdownDiv.id = "matchCountdown";
+            countdownDiv.className = "countdown-container";
+            header.appendChild(countdownDiv);
+            currentTimer = startCountdown(match.time, "matchCountdown");
+            
+            // تغيير النص الوسطي ليكون وقت المباراة
+            const vsEl = header.querySelector('div[style*="font-size: 24px"]');
+            if (vsEl) vsEl.innerText = match.time;
+        }
+    };
+</script>
+
 </body>
 </html>
