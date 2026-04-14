@@ -2,23 +2,6 @@
   "yesterday": [],
   "today": [
     {
-      "id": 1775911852185,
-      "team1": {
-        "name": "بيراميدز",
-        "logo": "https://i.postimg.cc/hjfrxHWV/22143.png",
-        "lineup": ""
-      },
-      "team2": {
-        "name": "المصري",
-        "logo": "https://i.postimg.cc/Fz00VvPR/8303.png",
-        "lineup": ""
-      },
-      "status": "finished",
-      "link": "https://p1.pandatv.xyz/albaplayer/on-time/",
-      "link2": "",
-      "download_url": ""
-    },
-    {
       "id": 1775911941005,
       "team1": {
         "name": "ميلان",
