@@ -2,23 +2,6 @@
   "yesterday": [],
   "today": [
     {
-      "id": 1775911941005,
-      "team1": {
-        "name": "ميلان",
-        "logo": "https://i.postimg.cc/8PDvgqK4/227.png",
-        "lineup": ""
-      },
-      "team2": {
-        "name": "أودينيزي",
-        "logo": "https://i.postimg.cc/yYLdZ69c/229.png",
-        "lineup": ""
-      },
-      "status": "finished",
-      "link": "https://2.simosports.live/splayer/Live4.php",
-      "link2": "",
-      "download_url": ""
-    },
-    {
       "id": 1775912016574,
       "team1": {
         "name": "برشلونة ",
