@@ -2,23 +2,6 @@
   "yesterday": [],
   "today": [
     {
-      "id": 1775912016574,
-      "team1": {
-        "name": "برشلونة ",
-        "logo": "https://i.postimg.cc/XqnYt0j7/132-(1).png",
-        "lineup": ""
-      },
-      "team2": {
-        "name": "اسبانيول",
-        "logo": "https://i.postimg.cc/W1dbB8vx/136-(1).png",
-        "lineup": ""
-      },
-      "status": "finished",
-      "link": "https://p1.pandatv.xyz/albaplayer/bein-3/",
-      "link2": "https://player.syria-player.live/albaplayer/bein1/?serv=0",
-      "download_url": ""
-    },
-    {
       "id": 1775912091130,
       "team1": {
         "name": "بايرن ميونخ",
