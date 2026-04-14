@@ -1,23 +1,5 @@
 {
   "yesterday": [],
-  "today": [
-    {
-      "id": 1775912466905,
-      "team1": {
-        "name": "الاهلي",
-        "logo": "https://i.postimg.cc/Kj7Jvthr/8200.webp",
-        "lineup": ""
-      },
-      "team2": {
-        "name": "سموحة",
-        "logo": "https://i.postimg.cc/ncYPHfHn/8309.png",
-        "lineup": ""
-      },
-      "status": "finished",
-      "link": "https://t.gwoo.online/albaplayer/ontime/?serv=1",
-      "link2": "https://t.gwoo.online/albaplayer/ontime/?serv=2",
-      "download_url": ""
-    }
-  ],
+  "today": [],
   "tomorrow": []
 }
