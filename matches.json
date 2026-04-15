@@ -2,23 +2,6 @@
   "yesterday": [],
   "today": [
     {
-      "id": 1776177453213,
-      "team1": {
-        "name": "برشلونة ",
-        "logo": "https://i.postimg.cc/QdtqWCjh/132-(1).png",
-        "lineup": "https://i.postimg.cc/ZY3LzX5N/Picsart-26-04-14-17-12-37-069.png"
-      },
-      "team2": {
-        "name": "اتليتكو مدريد",
-        "logo": "https://i.postimg.cc/Dz4dBNWR/134-(1).png",
-        "lineup": "https://i.postimg.cc/2S7VmFPs/IMG-20260414-164212.jpg"
-      },
-      "status": "live",
-      "link": "",
-      "link2": "https://testjojoo.s3.eu-north-1.amazonaws.com/bein2.html",
-      "download_url": ""
-    },
-    {
       "id": 1776177527824,
       "team1": {
         "name": "ليفربول",
