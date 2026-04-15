@@ -1,23 +1,5 @@
 {
   "yesterday": [],
-  "today": [
-    {
-      "id": 1776177527824,
-      "team1": {
-        "name": "ليفربول",
-        "logo": "https://i.postimg.cc/6qcd8JSV/108-(1).png",
-        "lineup": "https://i.postimg.cc/XNsGB8qj/IMG-20260414-164006.jpg"
-      },
-      "team2": {
-        "name": "باريس ",
-        "logo": "https://i.postimg.cc/ydXRGCVK/480.webp",
-        "lineup": "https://i.postimg.cc/0N1b1XWT/IMG-20260414-163953.jpg"
-      },
-      "status": "live",
-      "link": "",
-      "link2": "https://testjojoo.s3.eu-north-1.amazonaws.com/bein1.html",
-      "download_url": ""
-    }
-  ],
+  "today": [],
   "tomorrow": []
 }
