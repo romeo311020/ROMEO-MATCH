@@ -1,23 +1,5 @@
 {
   "yesterday": [],
-  "today": [
-    {
-      "id": 1776440748868,
-      "team1": {
-        "name": "الزمالك",
-        "logo": "https://i.postimg.cc/KjyCsHLT/alba-img-69e00ae8c96b0.png",
-        "lineup": "https://i.postimg.cc/XNcPYx9v/IMG-20260417-174503.jpg"
-      },
-      "team2": {
-        "name": "شباب بلوزداد",
-        "logo": "https://i.postimg.cc/8kh2rTQ4/alba-img-69e00ae8d0066.png",
-        "lineup": "https://i.postimg.cc/Bnt7N0kX/IMG-20260417-174450.jpg"
-      },
-      "status": "live",
-      "link": "https://4.simosports.live/splayer/Live2.php",
-      "link2": "https://cdnfbcdn.s3.eu-north-1.amazonaws.com/b3.html",
-      "download_url": ""
-    }
-  ],
+  "today": [],
   "tomorrow": []
 }
