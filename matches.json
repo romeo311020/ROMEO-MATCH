@@ -6,14 +6,14 @@
       "team1": {
         "name": "الزمالك",
         "logo": "https://i.postimg.cc/wj4ZJGpC/alba-img-69e00ae8c96b0.png",
-        "lineup": ""
+        "lineup": "https://i.postimg.cc/XYqJWqkV/IMG-20260423-193920.jpg"
       },
       "team2": {
         "name": "بيراميدز",
         "logo": "https://i.postimg.cc/L8WQhgtG/22143.webp",
-        "lineup": ""
+        "lineup": "https://i.postimg.cc/VvzfVkNv/IMG-20260423-193903.jpg"
       },
-      "status": "not_started",
+      "status": "live",
       "link": "",
       "link2": "",
       "download_url": ""
