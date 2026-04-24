@@ -17,6 +17,23 @@
       "link": "https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fkoraplus%2Fvideos%2F2194428168079225%2F&show",
       "link2": "",
       "download_url": ""
+    },
+    {
+      "id": 1777057595795,
+      "team1": {
+        "name": "ريال مدريد ",
+        "logo": "https://i.postimg.cc/5yJshTzh/131-(1).png",
+        "lineup": ""
+      },
+      "team2": {
+        "name": "ريال بتيس",
+        "logo": "https://i.postimg.cc/rwsf2SDv/146.webp",
+        "lineup": ""
+      },
+      "status": "live",
+      "link": "https://s3.us-east-1.amazonaws.com",
+      "link2": "",
+      "download_url": ""
     }
   ],
   "tomorrow": []
