@@ -1,23 +1,5 @@
 {
   "yesterday": [],
-  "today": [
-    {
-      "id": 1777057595795,
-      "team1": {
-        "name": "برشلونة ",
-        "logo": "https://i.postimg.cc/WpCryfDZ/132-(1).png",
-        "lineup": ""
-      },
-      "team2": {
-        "name": "خيتافي",
-        "logo": "https://i.postimg.cc/bdfZwWkj/140.webp",
-        "lineup": ""
-      },
-      "status": "live",
-      "link": "https://s3.us-east-1.amazonaws.com/livesajghjghjghddfd2/channel1.html",
-      "link2": "https://t.gwoo.online/albaplayer/bein1/?serv=1",
-      "download_url": ""
-    }
-  ],
+  "today": [],
   "tomorrow": []
 }
