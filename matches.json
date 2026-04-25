@@ -2,23 +2,6 @@
   "yesterday": [],
   "today": [
     {
-      "id": 1776961672935,
-      "team1": {
-        "name": "الزمالك",
-        "logo": "https://i.postimg.cc/wj4ZJGpC/alba-img-69e00ae8c96b0.png",
-        "lineup": "https://i.postimg.cc/XYqJWqkV/IMG-20260423-193920.jpg"
-      },
-      "team2": {
-        "name": "بيراميدز",
-        "logo": "https://i.postimg.cc/L8WQhgtG/22143.webp",
-        "lineup": "https://i.postimg.cc/VvzfVkNv/IMG-20260423-193903.jpg"
-      },
-      "status": "finished",
-      "link": "https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fkoraplus%2Fvideos%2F2194428168079225%2F&show",
-      "link2": "",
-      "download_url": ""
-    },
-    {
       "id": 1777057595795,
       "team1": {
         "name": "برشلونة ",
