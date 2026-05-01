@@ -2,23 +2,6 @@
   "yesterday": [],
   "today": [
     {
-      "id": 1777300505268,
-      "team1": {
-        "name": "الزمالك",
-        "logo": "https://i.postimg.cc/pdCxdrZf/alba-img-69e00ae8c96b0.png",
-        "lineup": ""
-      },
-      "team2": {
-        "name": "إنبي",
-        "logo": "https://i.postimg.cc/ydJVrBhH/8300.webp",
-        "lineup": ""
-      },
-      "status": "finished",
-      "link": "https://p7.panda-live.online/albaplayer/on-time/",
-      "link2": "https://s3.us-east-1.amazonaws.com/livesajghjghjghddfdy2/ON_SPORT_1.html",
-      "download_url": ""
-    },
-    {
       "id": 1777300803530,
       "team1": {
         "name": "الاهلي",
