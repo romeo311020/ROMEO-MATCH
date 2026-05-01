@@ -34,6 +34,23 @@
       "link": "",
       "link2": "",
       "download_url": ""
+    },
+    {
+      "id": 1777643207565,
+      "team1": {
+        "name": "سيراميكا كليوباترا ",
+        "logo": "https://i.postimg.cc/NGkwFcWq/50882.webp",
+        "lineup": ""
+      },
+      "team2": {
+        "name": "المصري",
+        "logo": "https://i.postimg.cc/XYhRm7yd/8303.png",
+        "lineup": ""
+      },
+      "status": "live",
+      "link": "",
+      "link2": "",
+      "download_url": ""
     }
   ],
   "tomorrow": []
