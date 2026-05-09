@@ -2,23 +2,6 @@
   "yesterday": [],
   "today": [
     {
-      "id": 1777643004725,
-      "team1": {
-        "name": "الاهلي",
-        "logo": "https://i.postimg.cc/259VPW7w/8200.webp",
-        "lineup": ""
-      },
-      "team2": {
-        "name": "الزمالك",
-        "logo": "https://i.postimg.cc/MpDcmNcP/alba-img-69e00ae8c96b0.png",
-        "lineup": ""
-      },
-      "status": "finished",
-      "link": "",
-      "link2": "",
-      "download_url": ""
-    },
-    {
       "id": 1777643108766,
       "team1": {
         "name": "بيراميدز",
