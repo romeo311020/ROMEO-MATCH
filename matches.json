@@ -68,6 +68,23 @@
       "link": "https://eyj0exaioijkv1qilcjhbgcioijiuzi1nij99ds.zliymordanex.sbs/playerv5.php?match=4702863&key=c0ae1abba6eebd7e6cc5b88b1d2B71547",
       "link2": "https://s3.us-east-1.amazonaws.com/dfgdfrgergtyerty8rr151456dx/channel1.html",
       "download_url": ""
+    },
+    {
+      "id": 1778334359290,
+      "team1": {
+        "name": "الزمالك",
+        "logo": "https://i.postimg.cc/NFxQ1bbN/alba-img-69e00ae8c96b0.png",
+        "lineup": ""
+      },
+      "team2": {
+        "name": "اتحاد العاصمة",
+        "logo": "https://i.postimg.cc/FzrMQvVN/d8a7d8aad8add8a7d8af-d8a7d984d8b9d8a7d8b5d985d8a9-1.webp",
+        "lineup": ""
+      },
+      "status": "not_started",
+      "link": "",
+      "link2": "",
+      "download_url": ""
     }
   ],
   "tomorrow": []
