@@ -102,6 +102,14 @@
         .nav-item { color: #888; text-decoration: none; font-size: 11px; text-align: center; }
         .nav-item.active { color: var(--premium-gold); }
         .nav-item i { font-size: 20px; display: block; }
+
+        /* --- إضافات CSS جديدة (Add Only) --- */
+        .player-box {
+            height: 65vh !important; /* تطويل المشغل */
+            aspect-ratio: auto !important;
+        }
+        .nav-item-new { color: #888; text-decoration: none; font-size: 11px; text-align: center; }
+        .nav-item-new i { font-size: 20px; display: block; }
     </style>
 </head>
 <body>
@@ -135,6 +143,7 @@
 
     <nav class="bottom-nav">
         <a href="#" class="nav-item active" onclick="showHome()"><i class="fas fa-home"></i><span>الرئيسية</span></a>
+        <a href="https://romeo311020.github.io/romeo-live-tv-31/" class="nav-item-new"><i class="fas fa-globe"></i><span>الموقع</span></a>
         <a href="https://wa.me/201027675035" class="nav-item"><i class="fab fa-whatsapp"></i><span>الدعم</span></a>
     </nav>
 
@@ -214,6 +223,48 @@
         function hideLoader() { document.getElementById('premiumLoader').style.display = 'none'; }
 
         window.onload = loadData;
+
+        /* --- إضافات JavaScript جديدة (Add Only) لتعريب النصوص وتحسين المنطق --- */
+        
+        // دالة جديدة لتصحيح النصوص والبيانات بعد التحميل
+        function applyArabicFixes() {
+            // تحويل أي كلمة undefined إلى "غير متوفر"
+            document.body.innerHTML = document.body.innerHTML.replace(/undefined/g, 'غير متوفر');
+        }
+
+        // تطوير دالة فتح المباراة لدعم سيرفر 2 وجلب الوقت المباشر
+        const originalOpenMatch = openMatch;
+        openMatch = function(match) {
+            showLoader();
+            setTimeout(() => {
+                document.getElementById('homePage').classList.remove('active');
+                document.getElementById('matchPage').classList.add('active');
+                
+                const playerBox = document.getElementById('playerBox');
+                // إذا لم تبدأ المباراة، نعرض وقتها من JSON
+                if (match.status !== 'live' && !match.stream) {
+                    playerBox.innerHTML = `<div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:24px; color:var(--premium-gold); font-weight:bold; text-align:center; padding:20px;">المباراة لم تبدأ بعد<br>تبدأ في تمام الساعة: ${match.time}</div>`;
+                } else {
+                    playerBox.innerHTML = `<iframe src="${match.stream || match.link}" allowfullscreen></iframe>`;
+                }
+                
+                const srvNav = document.getElementById('serverNav');
+                // جلب سيرفر 1 وسيرفر 2 بالعربي
+                const servers = [];
+                if(match.stream) servers.push({name: 'سيرفر 1', url: match.stream});
+                if(match.stream2) servers.push({name: 'سيرفر 2', url: match.stream2});
+
+                srvNav.innerHTML = servers.map((s, i) => `
+                    <button class="srv-btn ${i===0?'active':''}" onclick="changeServer('${s.url}', this)">${s.name}</button>
+                `).join('');
+                
+                applyArabicFixes();
+                hideLoader();
+            }, 1000);
+        };
+
+        // التأكد من تشغيل التعريب عند أي تحديث للبيانات
+        setInterval(applyArabicFixes, 2000);
     </script>
 </body>
 </html>
