@@ -102,20 +102,11 @@
         .nav-item { color: #888; text-decoration: none; font-size: 11px; text-align: center; }
         .nav-item.active { color: var(--premium-gold); }
         .nav-item i { font-size: 20px; display: block; }
-    </style>
 
-    <style id="new-styles">
-        .player-box {
-            height: 60vh !important; /* تطويل المشغل */
-            aspect-ratio: auto !important;
-        }
-        .new-nav-item {
-            color: #888;
-            text-decoration: none;
-            font-size: 11px;
-            text-align: center;
-        }
-        .new-nav-item i { font-size: 20px; display: block; }
+        /* --- إضافات CSS (Add Only) --- */
+        .player-box { height: 60vh !important; aspect-ratio: auto !important; }
+        .match-time-display { color: var(--premium-gold); font-size: 16px; font-weight: 700; margin-top: 5px; }
+        .match-ended { color: #888; font-size: 12px; font-weight: 600; display: block; }
     </style>
 </head>
 <body>
@@ -131,8 +122,7 @@
     </header>
 
     <div id="homePage" class="page active">
-        <div id="matchesContainer" class="matches-list">
-            </div>
+        <div id="matchesContainer" class="matches-list"></div>
     </div>
 
     <div id="matchPage" class="page">
@@ -141,28 +131,23 @@
                 <i class="fas fa-arrow-right"></i> العودة للرئيسية
             </div>
             
-            <div id="newServerNavTop" class="server-nav" style="margin-bottom: 15px;"></div>
-
+            <div id="serverNavTop" class="server-nav" style="margin-bottom: 10px;"></div>
             <div class="player-box" id="playerBox"></div>
-            
             <div id="serverNav" class="server-nav"></div>
         </div>
     </div>
 
     <nav class="bottom-nav">
         <a href="#" class="nav-item active" onclick="showHome()"><i class="fas fa-home"></i><span>الرئيسية</span></a>
-        <a href="https://romeo311020.github.io/romeo-live-tv-31/" class="new-nav-item">
-            <i class="fas fa-globe"></i><span>الموقع</span>
-        </a>
+        <a href="https://romeo311020.github.io/romeo-live-tv-31/" class="nav-item"><i class="fas fa-globe"></i><span>الموقع</span></a>
         <a href="https://wa.me/201027675035" class="nav-item"><i class="fab fa-whatsapp"></i><span>الدعم</span></a>
     </nav>
 
-    <script id="original-script">
+    <script id="original-logic">
         let db = { today: [] };
 
         async function loadData() {
             try {
-                // الكود بيسحب من نفس الملف اللي إنت مثبته في السيرفر
                 const response = await fetch('matches.json?v=' + Date.now());
                 const data = await response.json();
                 db.today = data.today || [];
@@ -176,22 +161,38 @@
 
         function renderMatches() {
             const container = document.getElementById('matchesContainer');
-            container.innerHTML = db.today.map(m => `
+            // تم إضافة منطق ذكي لاستبدال "غير متوفر" بالوقت أو الحالة
+            container.innerHTML = db.today.map(m => {
+                let statusHtml = '';
+                let resultOrTime = m.result;
+
+                if (m.status === 'live') {
+                    statusHtml = '<span class="status-live">🔴 مباشر</span>';
+                    if (!m.result || m.result.includes('undefined')) resultOrTime = 'جاري الآن';
+                } else if (m.status === 'ended') {
+                    statusHtml = '<span class="match-ended">انتهت</span>';
+                } else {
+                    // إذا لم تبدأ بعد، اعرض الوقت من حقل m.time
+                    statusHtml = `<div class="match-time-display">${m.time || ''}</div>`;
+                    resultOrTime = ''; 
+                }
+
+                return `
                 <div class="match-card" onclick="openMatch(${JSON.stringify(m).replace(/"/g, '&quot;')})">
                     <div class="team-col">
                         <img src="${m.team1.logo}">
                         <div>${m.team1.name}</div>
                     </div>
                     <div class="match-mid">
-                        ${m.status === 'live' ? '<span class="status-live">🔴 مباشر</span>' : ''}
-                        <div class="vs-badge">${m.result || m.time}</div>
+                        ${statusHtml}
+                        <div class="vs-badge">${resultOrTime === 'غير متوفر' || !resultOrTime ? 'VS' : resultOrTime}</div>
                     </div>
                     <div class="team-col">
                         <img src="${m.team2.logo}">
                         <div>${m.team2.name}</div>
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
         }
 
         function openMatch(match) {
@@ -201,17 +202,30 @@
                 document.getElementById('matchPage').classList.add('active');
                 
                 const playerBox = document.getElementById('playerBox');
-                playerBox.innerHTML = `<iframe src="${match.stream || match.link}" allowfullscreen></iframe>`;
+                const srvNavTop = document.getElementById('serverNavTop');
+
+                if (match.status !== 'live' && !match.stream) {
+                    playerBox.innerHTML = `
+                        <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#000; color:var(--premium-gold); text-align:center;">
+                            <i class="fas fa-clock" style="font-size:40px; margin-bottom:15px;"></i>
+                            <h2 style="font-weight:900;">المباراة لم تبدأ بعد</h2>
+                            <p style="color:#fff; margin-top:10px;">تبدأ في تمام الساعة: ${match.time || 'قريباً'}</p>
+                        </div>`;
+                } else {
+                    playerBox.innerHTML = `<iframe src="${match.stream || match.link}" allowfullscreen></iframe>`;
+                }
                 
-                const srvNav = document.getElementById('serverNav');
                 const servers = [
                     {name: 'سيرفر 1', url: match.stream},
                     {name: 'سيرفر 2', url: match.stream2}
                 ].filter(s => s.url);
 
-                srvNav.innerHTML = servers.map((s, i) => `
+                const serverButtons = servers.map((s, i) => `
                     <button class="srv-btn ${i===0?'active':''}" onclick="changeServer('${s.url}', this)">${s.name}</button>
                 `).join('');
+                
+                document.getElementById('serverNav').innerHTML = serverButtons;
+                srvNavTop.innerHTML = serverButtons; // إضافة السيرفرات فوق المشغل أيضاً كما طلبت
                 
                 hideLoader();
             }, 1000);
@@ -235,61 +249,17 @@
         window.onload = loadData;
     </script>
 
-    <script id="new-functions">
-        function translateAndFix() {
-            const bodyHtml = document.body.innerHTML;
-            if (bodyHtml.includes('undefined')) {
-                document.body.innerHTML = bodyHtml.replace(/undefined/g, 'غير متوفر');
-            }
-        }
-
-        // دالة جديدة لتشغيل المشغل بشكل صحيح مع السيرفرات والوقت
-        function executeEnhancedOpen(match) {
-            showLoader();
-            setTimeout(() => {
-                document.getElementById('homePage').classList.remove('active');
-                document.getElementById('matchPage').classList.add('active');
-                
-                const playerBox = document.getElementById('playerBox');
-                const topNav = document.getElementById('newServerNavTop');
-                
-                // التحقق من حالة المباراة وعرض الوقت إذا لم تبدأ
-                if (match.status !== 'live' && !match.stream) {
-                    playerBox.innerHTML = `
-                        <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#000; color:var(--premium-gold); text-align:center; padding:20px;">
-                            <i class="fas fa-clock" style="font-size:50px; margin-bottom:20px;"></i>
-                            <h2 style="font-weight:900;">المباراة لم تبدأ بعد</h2>
-                            <p style="margin-top:10px; font-size:18px; color:#fff;">موعد الانطلاق: ${match.time || 'غير محدد'}</p>
-                        </div>`;
-                    topNav.innerHTML = '';
-                } else {
-                    playerBox.innerHTML = `<iframe src="${match.stream || match.link}" allowfullscreen></iframe>`;
-                    
-                    // إعداد أزرار السيرفرات (سيرفر 1 وسيرفر 2)
-                    const servers = [];
-                    if(match.stream) servers.push({name: 'سيرفر 1', url: match.stream});
-                    if(match.stream2) servers.push({name: 'سيرفر 2', url: match.stream2});
-
-                    topNav.innerHTML = servers.map((s, i) => `
-                        <button class="srv-btn ${i===0?'active':''}" onclick="changeServer('${s.url}', this)">
-                            <i class="fas fa-play-circle"></i> ${s.name}
-                        </button>
-                    `).join('');
+    <script>
+        function fixContent() {
+            const elements = document.querySelectorAll('.vs-badge, .match-time-display');
+            elements.forEach(el => {
+                if (el.innerText.includes('undefined') || el.innerText.includes('غير متوفر')) {
+                    // إذا كان الوقت موجود، نضعه، وإلا نضع VS كفصل بين الفريقين
+                    el.innerText = 'VS';
                 }
-                
-                translateAndFix();
-                hideLoader();
-            }, 1000);
+            });
         }
-
-        // ربط الدالة الجديدة بالدالة الأصلية دون تغيير الكود القديم
-        const originalOpenMatch = openMatch;
-        openMatch = function(match) {
-            executeEnhancedOpen(match);
-        };
-
-        // تشغيل التعريب التلقائي
-        setInterval(translateAndFix, 3000);
+        setInterval(fixContent, 2000);
     </script>
 </body>
 </html>
