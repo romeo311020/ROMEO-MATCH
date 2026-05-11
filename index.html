@@ -261,5 +261,97 @@
         }
         setInterval(fixContent, 2000);
     </script>
+
+    <script id="new-logic-add-on">
+        // إعادة تعريف دالة العرض لتشمل تعديلات السيرفرات والوقت والحالة
+        function renderMatchesNew() {
+            const container = document.getElementById('matchesContainer');
+            if(!container) return;
+
+            container.innerHTML = db.today.map(m => {
+                let statusHtml = '';
+                let resultDisplay = m.result || 'VS';
+
+                // منطق الحالة "انتهت"
+                if (m.status === 'finished' || m.status === 'ended') {
+                    statusHtml = '<span class="match-ended" style="color:#888; display:block; margin-bottom:5px;">انتهت</span>';
+                } 
+                // منطق مباشر
+                else if (m.status === 'live') {
+                    statusHtml = '<span class="status-live" style="color:#ff3e3e; font-weight:900; animation:pulse 1s infinite; display:block; margin-bottom:5px;">🔴 مباشر</span>';
+                } 
+                // منطق لم تبدأ (جلب الوقت من JSON)
+                else {
+                    statusHtml = `<div class="match-time-display" style="color:var(--premium-gold); font-weight:bold;">${m.time || 'قريباً'}</div>`;
+                    resultDisplay = 'VS';
+                }
+
+                // تنظيف النتيجة من أي undefined
+                if(resultDisplay.includes('undefined')) resultDisplay = 'VS';
+
+                return `
+                <div class="match-card" onclick="openMatchNew(${JSON.stringify(m).replace(/"/g, '&quot;')})">
+                    <div class="team-col">
+                        <img src="${m.team1.logo}" style="width:45px; height:45px; object-fit:contain;">
+                        <div>${m.team1.name}</div>
+                    </div>
+                    <div class="match-mid">
+                        ${statusHtml}
+                        <div class="vs-badge" style="font-size:20px; font-weight:900; color:var(--premium-gold);">${resultDisplay}</div>
+                    </div>
+                    <div class="team-col">
+                        <img src="${m.team2.logo}" style="width:45px; height:45px; object-fit:contain;">
+                        <div>${m.team2.name}</div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // دالة فتح المباراة الجديدة لإضافة السيرفرات من JSON
+        function openMatchNew(match) {
+            showLoader();
+            setTimeout(() => {
+                document.getElementById('homePage').classList.remove('active');
+                document.getElementById('matchPage').classList.add('active');
+                
+                const playerBox = document.getElementById('playerBox');
+                
+                // جلب السيرفرات من الحقول link و link2 الموجودة في json
+                const serverList = [];
+                if(match.link) serverList.push({ name: 'سيرفر 1', url: match.link });
+                if(match.link2) serverList.push({ name: 'سيرفر 2', url: match.link2 });
+                if(match.link3) serverList.push({ name: 'سيرفر 3', url: match.link3 });
+
+                if ((match.status !== 'live' && match.status !== 'finished') && serverList.length === 0) {
+                    playerBox.innerHTML = `
+                        <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#000; color:var(--premium-gold); text-align:center;">
+                            <i class="fas fa-clock" style="font-size:40px; margin-bottom:15px;"></i>
+                            <h2 style="font-weight:900;">المباراة لم تبدأ بعد</h2>
+                            <p style="color:#fff; margin-top:10px;">تبدأ في تمام الساعة: ${match.time || 'قريباً'}</p>
+                        </div>`;
+                } else {
+                    const firstServer = serverList.length > 0 ? serverList[0].url : (match.link || '');
+                    playerBox.innerHTML = `<iframe src="${firstServer}" allowfullscreen></iframe>`;
+                }
+                
+                // إنشاء أزرار السيرفرات
+                const serverButtons = serverList.map((s, i) => `
+                    <button class="srv-btn ${i===0?'active':''}" onclick="changeServer('${s.url}', this)">${s.name}</button>
+                `).join('');
+                
+                document.getElementById('serverNav').innerHTML = serverButtons;
+                document.getElementById('serverNavTop').innerHTML = serverButtons; 
+                
+                hideLoader();
+            }, 600);
+        }
+
+        // ربط الدوال الجديدة بالدوال القديمة بدون حذف القديم
+        const originalRender = renderMatches;
+        renderMatches = renderMatchesNew;
+
+        const originalOpen = openMatch;
+        openMatch = openMatchNew;
+    </script>
 </body>
 </html>
