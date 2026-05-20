@@ -1,23 +1,5 @@
 {
   "yesterday": [],
-  "today": [
-    {
-      "id": 1778919233248,
-      "team1": {
-        "name": "الزمالك",
-        "logo": "https://i.postimg.cc/NFxQ1bbN/alba-img-69e00ae8c96b0.png",
-        "lineup": ""
-      },
-      "team2": {
-        "name": "اتحاد العاصمة",
-        "logo": "https://i.postimg.cc/FzrMQvVN/d8a7d8aad8add8a7d8af-d8a7d984d8b9d8a7d8b5d985d8a9-1.webp",
-        "lineup": ""
-      },
-      "status": "live",
-      "link": "https://eyj0exaioijkv1qilcjhbgcioijiuzi1nij99ds.zliymordanex.sbs/playerv5.php?match=4704196&key=c0ae1abba6eebd7e6cc5b88b1d2B71547",
-      "link2": "https://new.aflam4you.net/embed.php?vid=1",
-      "download_url": ""
-    }
-  ],
+  "today": [],
   "tomorrow": []
 }
