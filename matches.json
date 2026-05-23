@@ -2,23 +2,6 @@
   "yesterday": [],
   "today": [
     {
-      "id": 1779296024126,
-      "team1": {
-        "name": "الزمالك",
-        "logo": "https://i.postimg.cc/NFxQ1bbN/alba-img-69e00ae8c96b0.png",
-        "lineup": ""
-      },
-      "team2": {
-        "name": "سيراميكا كيلوباترا",
-        "logo": "https://i.postimg.cc/DwYS35R8/50882.webp",
-        "lineup": ""
-      },
-      "status": "finished",
-      "link": "https://eyj0exaioijkv1qilcjhbgcioijiuzi1nij99ds.zliymordanex.sbs/playerv5.php?match=4686691&key=c0ae1abba6eebd7e6cc5b88b1d2B715",
-      "link2": "",
-      "download_url": ""
-    },
-    {
       "id": 1779498264195,
       "team1": {
         "name": "ريال مدريد ",
